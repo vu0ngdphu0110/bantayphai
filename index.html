@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Physics Game Stats</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .stat-box { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>Physics Game - Thống kê</h1>
+
+  <div class="stat-box">
+    <p>Lượt truy cập: <span id="totalVisits">0</span></p>
+    <p>Người dùng: <span id="totalUsers">0</span></p>
+    <p>Lượt chơi: <span id="totalGames">0</span></p>
+    <p>Tổng câu hỏi: <span id="totalQuestions">0</span></p>
+    <p>Trả lời đúng: <span id="totalCorrect">0</span></p>
+    <p>Tỷ lệ đúng: <span id="globalAccuracy">0%</span></p>
+    <p>Điểm cao nhất: <span id="highScore">0</span></p>
+    <p>Lượt truy cập hôm nay: <span id="todayVisits">0</span></p>
+    <p>Chuỗi ngày truy cập: <span id="currentStreak">0</span></p>
+    <p>Thời gian trung bình: <span id="avgTime">00:00</span></p>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxqE_Rh4HH1NwVzgJQ_CL58ndKxS0Cm5Dw_1oSLTpm72fWdC-qL23R6rIksBO29NGUK/exec";
+
+    class StatisticsManager {
+      constructor() {
+        this.stats = {
+          totalVisits: 0,
+          totalUsers: 0,
+          totalGames: 0,
+          totalQuestions: 0,
+          totalCorrect: 0,
+          highScore: 0,
+          totalTime: 0,
+          todayVisits: 0,
+          currentStreak: 0,
+          lastStreakDate: ""
+        };
+      }
+
+      async loadStats() {
+        try {
+          const res = await fetch(API_URL);
+          const data = await res.json();
+          this.stats = data;
+          return this.stats;
+        } catch (e) {
+          console.error("Lỗi loadStats:", e);
+          return this.stats;
+        }
+      }
+
+      saveStats() {
+        fetch(API_URL, {
+          method: "POST",
+          body: new URLSearchParams({
+            action: "updateGlobal",
+            totalVisits: this.stats.totalVisits,
+            totalUsers: this.stats.totalUsers,
+            totalGames: this.stats.totalGames,
+            totalQuestions: this.stats.totalQuestions,
+            totalCorrect: this.stats.totalCorrect,
+            highScore: this.stats.highScore,
+            totalTime: this.stats.totalTime,
+            todayVisits: this.stats.todayVisits,
+            currentStreak: this.stats.currentStreak,
+            lastStreakDate: this.stats.lastStreakDate
+          })
+        });
+      }
+
+      async updateDisplay() {
+        try {
+          const res = await fetch(API_URL);
+          const stats = await res.json();
+          document.getElementById('totalVisits').textContent = stats.totalVisits || 0;
+          document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
+          document.getElementById('totalGames').textContent = stats.totalGames || 0;
+          document.getElementById('totalQuestions').textContent = stats.totalQuestions || 0;
+          document.getElementById('totalCorrect').textContent = stats.totalCorrect || 0;
+          document.getElementById('globalAccuracy').textContent =
+            stats.totalQuestions > 0 ? Math.round((stats.totalCorrect / stats.totalQuestions) * 100) + "%" : "0%";
+          document.getElementById('avgTime').textContent = this.getAverageTime(stats);
+          document.getElementById('highScore').textContent = stats.highScore || 0;
+          document.getElementById('todayVisits').textContent = stats.todayVisits || 0;
+          document.getElementById('currentStreak').textContent = stats.currentStreak || 0;
+        } catch (e) {
+          console.error("Lỗi updateDisplay:", e);
+        }
+      }
+
+      getAverageTime(stats) {
+        if (!stats || stats.totalGames == 0) return "00:00";
+        const avgSeconds = Math.floor(stats.totalTime / stats.totalGames / 1000);
+        const minutes = Math.floor(avgSeconds / 60);
+        const seconds = avgSeconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }
+    }
+
+    // Hàm lưu session học sinh
+    function saveStudentSession(studentName, studentClass, score, totalQuestions, timeSpent) {
+      const today = new Date();
+      const dateStr = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+
+      const correctAnswers = score;
+      const wrongAnswers = totalQuestions - score;
+      const accuracy = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+      const score10 = Math.round((accuracy / 100) * 10 * 100) / 100;
+      const score100 = accuracy;
+
+      fetch(API_URL, {
+        method: "POST",
+        body: new URLSearchParams({
+          action: "addSession",
+          name: studentName,
+          class: studentClass,
+          date: dateStr,
+          accessCount: 1,
+          totalQuestions: totalQuestions,
+          correctAnswers: correctAnswers,
+          wrongAnswers: wrongAnswers,
+          accuracy: accuracy,
+          score10: score10,
+          score100: score100,
+          timeSpent: timeSpent
+        })
+      });
+    }
+
+    // Khởi động
+    const statsManager = new StatisticsManager();
+    statsManager.updateDisplay();
+  </script>
+</body>
+</html>
