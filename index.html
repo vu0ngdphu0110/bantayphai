@@ -1,142 +1,2492 @@
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Physics Game Stats</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .stat-box { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧲⚡ Quy tắc bàn tay trái - Xác định lực từ</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        /* Login Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .login-title {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .login-subtitle {
+            font-size: 1.2em;
+            color: #4a5568;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(66, 153, 225, 0.3);
+        }
+        
+        /* Game Styles */
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            position: relative;
+            display: none;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 { font-size: 2em; margin-bottom: 8px; }
+        .header p { font-size: 1.1em; }
+        
+        .question-section {
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px 20px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            max-width: 500px;
+            display: none;
+        }
+        
+        .question-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .question-details {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .question-item {
+            background: #f0f9ff;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-weight: 600;
+        }
+        
+        .question-item.known {
+            color: #10b981;
+            border: 2px solid #10b981;
+        }
+        
+        .question-item.unknown {
+            color: #dc2626;
+            border: 2px solid #dc2626;
+            background: #fef2f2;
+        }
+        
+        .left-panel {
+            position: absolute;
+            top: 120px;
+            left: 20px;
+            width: 260px;
+            height: calc(100vh - 140px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 8px 0 32px rgba(0, 0, 0, 0.1);
+            padding: 12px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 10px;
+        }
+        
+        .right-panel {
+            position: absolute;
+            top: 120px;
+            right: 20px;
+            width: 260px;
+            height: calc(100vh - 140px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.1);
+            padding: 12px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: grid;
+            grid-template-rows: auto auto auto 1fr;
+            gap: 10px;
+        }
+        
+        .canvas-area {
+            position: absolute;
+            top: 240px;
+            left: 300px;
+            width: calc(100vw - 580px);
+            height: calc(100vh - 260px);
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        .math-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        .math-label {
+            position: absolute;
+            font-size: 22px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+        
+        .math-label.force { color: #8b5cf6; }
+        .math-label.force-correct { color: #dc2626; font-size: 28px; }
+        .math-label.force-user { color: #8b5cf6; font-size: 28px; }
+        .math-label.current { color: #10b981; font-size: 24px; }
+        .math-label.unknown { color: #dc2626; }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section h3 {
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        .answer-palette {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+        
+        .answer-option {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 10px 6px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            user-select: none;
+            min-height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid transparent;
+        }
+        
+        .answer-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .answer-option.selected {
+            border-color: #dc2626;
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.5);
+            animation: pulse-red 1s infinite;
+        }
+        
+        .answer-option.zero-answer {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            grid-column: span 3;
+        }
+        
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(220, 38, 38, 0.8); }
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 10px;
+            margin: 3px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary { background: linear-gradient(135deg, #4299e1, #3182ce); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #ed8936, #dd6b20); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #f56565, #e53e3e); color: white; }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .score-board {
+            background: linear-gradient(135deg, #38b2ac, #319795);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .timer-board {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .timer-display {
+            font-size: 20px;
+            font-family: 'Courier New', monospace;
+            margin: 6px 0;
+        }
+        
+        .score-item {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+        
+        .player-name {
+            font-size: 14px;
+            margin-bottom: 8px;
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+        }
+        
+        .message {
+            padding: 8px;
+            border-radius: 8px;
+            margin: 6px 0;
+            font-weight: 600;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .message.correct {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 2px solid #48bb78;
+        }
+        
+        .message.incorrect {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 2px solid #f56565;
+        }
+        
+        .message.info {
+            background: #e6fffa;
+            color: #234e52;
+            border: 2px solid #38b2ac;
+        }
+        
+        .instructions {
+            background: #e6fffa;
+            border-left: 3px solid #38b2ac;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+        
+        .physics-note {
+            background: #fff5f5;
+            border: 1px solid #fc8181;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #742a2a;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+        
+        /* Popups */
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .popup-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        
+        .popup.show .popup-content {
+            transform: scale(1);
+        }
+        
+        .popup-icon { font-size: 80px; margin-bottom: 20px; }
+        .popup-title { font-size: 32px; font-weight: bold; margin-bottom: 15px; }
+        .popup-desc { font-size: 18px; margin-bottom: 25px; line-height: 1.5; }
+        .popup-score {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px 0;
+            display: inline-block;
+        }
+        
+        .close-btn {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 5px;
+        }
+        
+        .close-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(66, 153, 225, 0.3);
+        }
+        
+        .restart-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 5px;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Final Results Popup */
+        .final-results {
+            background: linear-gradient(135deg, #fef7cd, #fef3c7);
+            border: 8px solid #d97706;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        
+        .final-results-header { 
+            font-size: 48px; 
+            margin-bottom: 20px; 
+        }
+        
+        .final-results-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #92400e;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .final-results-student {
+            font-size: 24px;
+            color: #1f2937;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+        
+        .final-results-stats {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #d97706;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            background: rgba(217, 119, 6, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #d97706;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #92400e;
+            font-weight: 600;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        .final-message {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .final-message.excellent {
+            background: rgba(34, 197, 94, 0.1);
+            border: 3px solid #22c55e;
+            color: #15803d;
+        }
+        
+        .final-message.good {
+            background: rgba(251, 191, 36, 0.1);
+            border: 3px solid #fbbf24;
+            color: #92400e;
+        }
+        
+        .final-message.needs-improvement {
+            background: rgba(239, 68, 68, 0.1);
+            border: 3px solid #ef4444;
+            color: #991b1b;
+        }
+        
+        /* Statistics Panel */
+        .stats-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e2e8f0;
+            min-width: 200px;
+            z-index: 1500;
+        }
+        
+        .stats-header {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .stats-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+        }
+        
+        .stats-item:last-child {
+            border-bottom: none;
+        }
+        
+        .stats-label {
+            color: #4a5568;
+            font-weight: 600;
+        }
+        
+        .stats-value {
+            color: #2d3748;
+            font-weight: bold;
+            background: #f7fafc;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .stats-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(66, 153, 225, 0.3);
+            z-index: 1600;
+            transition: all 0.3s ease;
+        }
+        
+        .stats-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+        }
+        
+        .stats-panel.hidden {
+            display: none;
+        }
+        
+        .stats-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 3px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .stats-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Student Statistics Table */
+        .student-stats-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .student-stats-popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .student-stats-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 95vw;
+            max-height: 90vh;
+            width: 1200px;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .student-stats-popup.show .student-stats-content {
+            transform: scale(1);
+        }
+        
+        .stats-table-header {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .stats-table-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stats-table-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .stats-table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        .stats-table th {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            color: #2d3748;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 2px solid #cbd5e0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .stats-table td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .stats-table tbody tr:hover {
+            background: #f7fafc;
+        }
+        
+        .stats-table tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+        
+        .stats-table tbody tr:nth-child(even):hover {
+            background: #f0f9ff;
+        }
+        
+        .score-excellent { color: #059669; font-weight: bold; }
+        .score-good { color: #d97706; font-weight: bold; }
+        .score-needs-improvement { color: #dc2626; font-weight: bold; }
+        
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 2px solid #0ea5e9;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .summary-label {
+            font-size: 14px;
+            color: #0369a1;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .summary-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e40af;
+        }
+        
+        .close-stats-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px 10px 0 0;
+            transition: all 0.3s ease;
+        }
+        
+        .close-stats-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+        }
+        
+        .export-csv-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px 10px 0 0;
+            transition: all 0.3s ease;
+        }
+        
+        .export-csv-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Custom Scrollbar */
+        .left-panel::-webkit-scrollbar,
+        .right-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .left-panel::-webkit-scrollbar-track,
+        .right-panel::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        
+        .left-panel::-webkit-scrollbar-thumb,
+        .right-panel::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            border-radius: 10px;
+        }
+        
+        .left-panel::-webkit-scrollbar-thumb:hover,
+        .right-panel::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #3182ce, #2c5282);
+        }
+        
+        /* Firefox scrollbar */
+        .left-panel,
+        .right-panel {
+            scrollbar-width: thin;
+            scrollbar-color: #4299e1 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .game-container {
+                display: flex;
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            .question-section, .right-panel, .canvas-area, .left-panel {
+                position: relative;
+                transform: none;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 10px 0;
+                padding: 15px;
+                height: auto;
+                overflow: visible;
+            }
+            
+            .question-section { order: 1; max-width: none; }
+            .right-panel { order: 2; }
+            .canvas-area { order: 3; height: 300px; }
+            .left-panel { order: 4; }
+            
+            .answer-option {
+                padding: 12px 6px;
+                font-size: 13px;
+                min-height: 55px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Physics Game - Thống kê</h1>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <h1 class="login-title">🧲⚡ Quy tắc bàn tay trái</h1>
+            <p class="login-subtitle">Xác định lực từ</p>
+            
+            <form onsubmit="startGame(event)">
+                <div class="form-group">
+                    <label for="studentName">Tên học sinh</label>
+                    <input type="text" id="studentName" required placeholder="Nhập tên của bạn">
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentClass">Lớp</label>
+                    <input type="text" id="studentClass" required placeholder="Ví dụ: 12A1">
+                </div>
+                
+                <button type="submit" class="login-btn">Bắt đầu học tập</button>
+            </form>
+        </div>
+    </div>
 
-  <div class="stat-box">
-    <p>Lượt truy cập: <span id="totalVisits">0</span></p>
-    <p>Người dùng: <span id="totalUsers">0</span></p>
-    <p>Lượt chơi: <span id="totalGames">0</span></p>
-    <p>Tổng câu hỏi: <span id="totalQuestions">0</span></p>
-    <p>Trả lời đúng: <span id="totalCorrect">0</span></p>
-    <p>Tỷ lệ đúng: <span id="globalAccuracy">0%</span></p>
-    <p>Điểm cao nhất: <span id="highScore">0</span></p>
-    <p>Lượt truy cập hôm nay: <span id="todayVisits">0</span></p>
-    <p>Chuỗi ngày truy cập: <span id="currentStreak">0</span></p>
-    <p>Thời gian trung bình: <span id="avgTime">00:00</span></p>
-  </div>
+    <!-- Game Page -->
+    <div id="gamePage" class="game-container">
+        <div class="header">
+            <h1>🧲⚡ Quy tắc bàn tay trái - Xác định lực từ</h1>
+            <p>Áp dụng công thức: $\vec{F} = I \vec{l} \times \vec{B}$ - Tam diện thuận $\vec{B}$, $I$, $\vec{F}$</p>
+        </div>
+        
+        <div id="questionSection" class="question-section">
+            <div class="question-title" id="questionTitle">Câu 1: Tìm đại lượng chưa biết</div>
+            <div class="question-details">
+                <div class="question-item known" id="knownItem1">
+                    <span id="known1">Đã biết 1</span>
+                </div>
+                <div class="question-item known" id="knownItem2">
+                    <span id="known2">Đã biết 2</span>
+                </div>
+                <div class="question-item unknown" id="unknownItem">
+                    <span id="unknown">Cần tìm: ?</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="canvas-area">
+            <canvas id="canvas"></canvas>
+            <div class="math-overlay" id="mathOverlay"></div>
+        </div>
+        
+        <div class="left-panel">
+            <div class="section">
+                <h3 id="answerTitle">🎯 Chọn câu trả lời</h3>
+                <div class="answer-palette" id="answerPalette">
+                    <div class="answer-option" onclick="selectAnswer('up')">↑<br>Lên</div>
+                    <div class="answer-option" onclick="selectAnswer('down')">↓<br>Xuống</div>
+                    <div class="answer-option" onclick="selectAnswer('left')">←<br>Trái</div>
+                    <div class="answer-option" onclick="selectAnswer('right')">→<br>Phải</div>
+                    <div class="answer-option" onclick="selectAnswer('out')">●<br>Ra</div>
+                    <div class="answer-option" onclick="selectAnswer('in')">×<br>Vào</div>
+                    <div class="answer-option zero-answer" onclick="selectAnswer('zero')" id="zeroOption">= 0</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>🎮 Thao tác</h3>
+                <button class="btn btn-primary" onclick="newQuestion()">🎲 Câu hỏi mới</button>
+                <button class="btn btn-warning" onclick="checkAnswer()" id="checkBtn" disabled>✅ Kiểm tra đáp án</button>
+                <button class="btn btn-danger" onclick="finishExam()">🏁 Kết thúc bài làm</button>
+                <button class="btn btn-danger" onclick="resetGame()">🔄 Đặt lại</button>
+            </div>
+        </div>
+        
+        <div class="right-panel">
+            <div class="section">
+                <div class="timer-board">
+                    <div>⏱️ Thời gian</div>
+                    <div class="timer-display" id="timerDisplay">00:00</div>
+                    <div style="font-size: 14px;">Đã làm bài</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="score-board">
+                    <div class="player-name" id="playerInfo">Học sinh</div>
+                    <div class="score-item">🏆 Điểm: <span id="score">0</span></div>
+                    <div class="score-item">📊 Tổng: <span id="total">0</span></div>
+                    <div class="score-item">📈 Đúng: <span id="accuracy">0%</span></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>📚 Hướng dẫn</h3>
+                <div class="instructions">
+                    <ul>
+                        <li>Quan sát 2 đại lượng đã biết</li>
+                        <li><strong>Chọn</strong> hướng của đại lượng còn lại</li>
+                        <li>Áp dụng quy tắc bàn tay trái</li>
+                        <li>$\vec{B}$, $I$, $\vec{F}$ tạo tam diện thuận</li>
+                    </ul>
+                </div>
+                <div class="physics-note">
+                    <strong>⚠️ Lưu ý:</strong> Nếu hai đại lượng song song thì đại lượng thứ 3 = 0
+                </div>
+                <div id="message"></div>
+            </div>
+        </div>
+    </div>
 
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbxqE_Rh4HH1NwVzgJQ_CL58ndKxS0Cm5Dw_1oSLTpm72fWdC-qL23R6rIksBO29NGUK/exec";
+    <!-- Result Popup -->
+    <div id="resultPopup" class="popup">
+        <div class="popup-content">
+            <div id="popupIcon" class="popup-icon">🎉</div>
+            <div id="popupTitle" class="popup-title">Chính xác!</div>
+            <div id="popupDesc" class="popup-desc">Bạn đã áp dụng đúng quy tắc bàn tay trái!</div>
+            <div id="popupScore" class="popup-score">+1 điểm</div>
+            <button class="close-btn" onclick="closePopup()">Tiếp tục</button>
+        </div>
+    </div>
 
-    class StatisticsManager {
-      constructor() {
-        this.stats = {
-          totalVisits: 0,
-          totalUsers: 0,
-          totalGames: 0,
-          totalQuestions: 0,
-          totalCorrect: 0,
-          highScore: 0,
-          totalTime: 0,
-          todayVisits: 0,
-          currentStreak: 0,
-          lastStreakDate: ""
-        };
-      }
+    <!-- Final Results Popup -->
+    <div id="finalResultsPopup" class="popup">
+        <div class="final-results">
+            <div class="final-results-header">🏆</div>
+            <div class="final-results-title">Kết quả bài làm</div>
+            <div class="final-results-student" id="finalResultsStudent">Học sinh: [Tên]</div>
+            
+            <div class="final-results-stats">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Tổng câu hỏi</div>
+                        <div class="stat-value" id="finalTotal">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Câu trả lời đúng</div>
+                        <div class="stat-value" id="finalCorrect">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Tỷ lệ chính xác</div>
+                        <div class="stat-value" id="finalAccuracy">0%</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Thời gian làm bài</div>
+                        <div class="stat-value" id="finalTime">00:00</div>
+                    </div>
+                </div>
+                
+                <div class="final-message" id="finalMessage">
+                    🎉 Chúc mừng! Bạn đã hoàn thành xuất sắc!
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button class="close-btn" onclick="closeFinalResults()">Đóng</button>
+                <button class="restart-btn" onclick="restartGame()">🔄 Chơi lại</button>
+            </div>
+        </div>
+    </div>
 
-      async loadStats() {
-        try {
-          const res = await fetch(API_URL);
-          const data = await res.json();
-          this.stats = data;
-          return this.stats;
-        } catch (e) {
-          console.error("Lỗi loadStats:", e);
-          return this.stats;
+    <!-- Student Statistics Popup -->
+    <div id="studentStatsPopup" class="student-stats-popup">
+        <div class="student-stats-content">
+            <div class="stats-table-header">
+                <div class="stats-table-title">📊 Thống kê học sinh tháng <span id="currentMonth"></span></div>
+                <div class="stats-table-subtitle">Dữ liệu chi tiết về kết quả học tập của từng học sinh</div>
+            </div>
+            
+            <div class="stats-summary" id="statsSummary">
+                <!-- Summary cards will be inserted here -->
+            </div>
+            
+            <div class="stats-table-container">
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Họ tên</th>
+                            <th>Lớp</th>
+                            <th>Ngày</th>
+                            <th>Lượt truy cập</th>
+                            <th>Câu làm</th>
+                            <th>Câu đúng</th>
+                            <th>Câu sai</th>
+                            <th>Tỷ lệ (%)</th>
+                            <th>Điểm (10)</th>
+                            <th>Điểm (100)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statsTableBody">
+                        <!-- Student data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="close-stats-btn" onclick="closeStudentStats()">✖️ Đóng</button>
+                <button class="export-csv-btn" onclick="exportCSV()">📊 Xuất CSV</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Panel -->
+    <button id="statsToggle" class="stats-toggle" onclick="toggleStats()" title="Xem thống kê">📊</button>
+    
+    <div id="statsPanel" class="stats-panel hidden">
+        <div class="stats-header">📊 Thống kê hệ thống</div>
+        
+        <div class="stats-item">
+            <span class="stats-label">🌐 Lượt truy cập:</span>
+            <span class="stats-value" id="totalVisits">0</span>
+        </div>
+        
+        <div class="stats-item">
+            <span class="stats-label">👥 Người dùng:</span>
+            <span class="stats-value" id="totalUsers">0</span>
+        </div>
+        
+        <div class="stats-item">
+            <span class="stats-label">🎮 Lượt chơi:</span>
+            <span class="stats-value" id="totalGames">0</span>
+        </div>
+        
+        <div class="stats-item">
+            <span class="stats-label">❓ Câu hỏi:</span>
+            <span class="stats-value" id="totalQuestions">0</span>
+        </div>
+        
+        <div class="stats-item">
+            <span class="stats-label">✅ Đúng:</span>
+            <span class="stats-value" id="totalCorrect">0</span>
+        </div>
+        
+        <div class="stats-item">
+            <span class="stats-label">📈 Tỷ lệ đúng:</span>
+            <span class="stats-value" id="globalAccuracy">0%</span>
+        </div>
+        
+        <div class="stats-item">
+            <span class="stats-label">⏱️ Thời gian TB:</span>
+            <span class="stats-value" id="avgTime">00:00</span>
+        </div>
+        
+        <div class="stats-item">
+            <span class="stats-label">🏆 Điểm cao nhất:</span>
+            <span class="stats-value" id="highScore">0</span>
+        </div>
+        
+        <div class="stats-item">
+            <span class="stats-label">📅 Hôm nay:</span>
+            <span class="stats-value" id="todayVisits">0</span>
+        </div>
+        
+        <div class="stats-item">
+            <span class="stats-label">🔥 Streak:</span>
+            <span class="stats-value" id="currentStreak">0</span>
+        </div>
+        
+        <div style="margin-top: 15px; padding-top: 10px; border-top: 2px solid #e2e8f0;">
+            <button class="stats-btn" onclick="showStudentStats()" title="Xem bảng thống kê học sinh">
+                📋 Bảng thống kê
+            </button>
+            <button class="stats-btn" onclick="exportCSV()" title="Tải file CSV thống kê tháng này">
+                📊 Xuất CSV
+            </button>
+        </div>
+    </div>
+
+    <script>
+		const API_URL = "https://script.google.com/macros/s/AKfycbxqE_Rh4HH1NwVzgJQ_CL58ndKxS0Cm5Dw_1oSLTpm72fWdC-qL23R6rIksBO29NGUK/exec";
+        let game;
+        let studentName = '';
+        let studentClass = '';
+        let statsManager;
+        
+        // Statistics Manager Class
+        class StatisticsManager {
+            constructor() {
+                this.initializeStats();
+                this.trackVisit();
+                this.updateDisplay();
+                
+                // Auto-update every 30 seconds
+                setInterval(() => {
+                    this.updateDisplay();
+                }, 30000);
+            }
+            
+            initializeStats() {
+                // Initialize default stats if not exists
+                const defaultStats = {
+                    totalVisits: 0,
+                    totalUsers: 0,
+                    totalGames: 0,
+                    totalQuestions: 0,
+                    totalCorrect: 0,
+                    totalTime: 0,
+                    highScore: 0,
+                    todayVisits: 0,
+                    lastVisitDate: null,
+                    currentStreak: 0,
+                    lastStreakDate: null,
+                    userSessions: {},
+                    dailyStats: {}
+                };
+                
+                // Load existing stats or use defaults
+                this.stats = this.loadStats() || defaultStats;
+                this.saveStats();
+            }
+            
+			async loadStats() {
+				try {
+					const res = await fetch(API_URL);
+					return await res.json();
+				} catch (e) {
+					console.warn("Could not load stats:", e);
+					return null;
+				}
+			}
+			
+			saveStats() {
+				fetch(API_URL, {
+					method: "POST",
+					body: new URLSearchParams({
+						action: "updateGlobal",
+						totalVisits: this.stats.totalVisits,
+						totalUsers: this.stats.totalUsers,
+						totalGames: this.stats.totalGames,
+						totalQuestions: this.stats.totalQuestions,
+						totalCorrect: this.stats.totalCorrect,
+						highScore: this.stats.highScore,
+						totalTime: this.stats.totalTime,
+						todayVisits: this.stats.todayVisits,
+						currentStreak: this.stats.currentStreak,
+						lastStreakDate: this.stats.lastStreakDate
+					})
+				});
+			}
+            
+            trackVisit() {
+                const today = new Date().toDateString();
+                const now = Date.now();
+                
+                // Increment total visits
+                this.stats.totalVisits++;
+                
+                // Track daily visits
+                if (!this.stats.dailyStats[today]) {
+                    this.stats.dailyStats[today] = { visits: 0, games: 0, questions: 0, correct: 0 };
+                }
+                this.stats.dailyStats[today].visits++;
+                this.stats.todayVisits = this.stats.dailyStats[today].visits;
+                
+                // Update streak
+                this.updateStreak(today);
+                
+                // Clean old daily stats (keep only last 30 days)
+                this.cleanOldStats();
+                
+                this.saveStats();
+            }
+            
+            updateStreak(today) {
+                const lastDate = this.stats.lastStreakDate;
+                
+                if (!lastDate) {
+                    // First visit
+                    this.stats.currentStreak = 1;
+                } else {
+                    const lastVisit = new Date(lastDate);
+                    const todayDate = new Date(today);
+                    const diffTime = todayDate - lastVisit;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays === 1) {
+                        // Consecutive day
+                        this.stats.currentStreak++;
+                    } else if (diffDays > 1) {
+                        // Streak broken
+                        this.stats.currentStreak = 1;
+                    }
+                    // Same day = no change
+                }
+                
+                this.stats.lastStreakDate = today;
+            }
+            
+            cleanOldStats() {
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                
+                Object.keys(this.stats.dailyStats).forEach(date => {
+                    if (new Date(date) < thirtyDaysAgo) {
+                        delete this.stats.dailyStats[date];
+                    }
+                });
+            }
+            
+            trackUser(name, className) {
+                const userKey = `${name}_${className}`;
+                
+                if (!this.stats.userSessions[userKey]) {
+                    this.stats.totalUsers++;
+                    this.stats.userSessions[userKey] = {
+                        name: name,
+                        class: className,
+                        firstVisit: Date.now(),
+                        sessions: 0,
+                        totalQuestions: 0,
+                        totalCorrect: 0,
+                        bestScore: 0,
+                        totalTime: 0
+                    };
+                }
+                
+                this.stats.userSessions[userKey].sessions++;
+                this.saveStats();
+            }
+            
+            trackGameStart() {
+                const today = new Date().toDateString();
+                
+                this.stats.totalGames++;
+                
+                if (this.stats.dailyStats[today]) {
+                    this.stats.dailyStats[today].games++;
+                }
+                
+                this.saveStats();
+                this.updateDisplay();
+            }
+            
+            trackQuestion(isCorrect) {
+                const today = new Date().toDateString();
+                
+                this.stats.totalQuestions++;
+                
+                if (isCorrect) {
+                    this.stats.totalCorrect++;
+                }
+                
+                if (this.stats.dailyStats[today]) {
+                    this.stats.dailyStats[today].questions++;
+                    if (isCorrect) {
+                        this.stats.dailyStats[today].correct++;
+                    }
+                }
+                
+                // Update user stats
+                const userKey = `${studentName}_${studentClass}`;
+                if (this.stats.userSessions[userKey]) {
+                    this.stats.userSessions[userKey].totalQuestions++;
+                    if (isCorrect) {
+                        this.stats.userSessions[userKey].totalCorrect++;
+                    }
+                }
+                
+                this.saveStats();
+                this.updateDisplay();
+            }
+            
+            trackGameEnd(score, totalQuestions, timeSpent) {
+                // Update high score
+                if (score > this.stats.highScore) {
+                    this.stats.highScore = score;
+                }
+                
+                // Update total time
+                this.stats.totalTime += timeSpent;
+                
+                // Update user stats
+                const userKey = `${studentName}_${studentClass}`;
+                if (this.stats.userSessions[userKey]) {
+                    const user = this.stats.userSessions[userKey];
+                    if (score > user.bestScore) {
+                        user.bestScore = score;
+                    }
+                    user.totalTime += timeSpent;
+                }
+                
+                // Save detailed student session data
+                this.saveStudentSession(score, totalQuestions, timeSpent);
+                
+                this.saveStats();
+                this.updateDisplay();
+            }
+            
+			saveStudentSession(score, totalQuestions, timeSpent) {
+				const today = new Date();
+				const dateStr = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+				
+				const correctAnswers = score;
+				const wrongAnswers = totalQuestions - score;
+				const accuracy = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+				const score10 = Math.round((accuracy / 100) * 10 * 100) / 100;
+				const score100 = accuracy;
+
+				fetch(API_URL, {
+					method: "POST",
+					body: new URLSearchParams({
+						action: "addSession",
+						name: studentName,
+						class: studentClass,
+						date: dateStr,
+						accessCount: 1,
+						totalQuestions: totalQuestions,
+						correctAnswers: correctAnswers,
+						wrongAnswers: wrongAnswers,
+						accuracy: accuracy,
+						score10: score10,
+						score100: score100,
+						timeSpent: timeSpent
+					})
+				});
+			}
+            
+            loadStudentSessions() {
+                try {
+                    const saved = localStorage.getItem('studentGameSessions');
+                    return saved ? JSON.parse(saved) : [];
+                } catch (e) {
+                    console.warn('Could not load student sessions:', e);
+                    return [];
+                }
+            }
+            
+            saveStudentSessions(sessions) {
+                try {
+                    localStorage.setItem('studentGameSessions', JSON.stringify(sessions));
+                } catch (e) {
+                    console.warn('Could not save student sessions:', e);
+                }
+            }
+            
+            getStudentSessionsForMonth(month, year) {
+                const sessions = this.loadStudentSessions();
+                
+                return sessions.filter(session => {
+                    const [day, sessionMonth, sessionYear] = session.date.split('/').map(Number);
+                    return sessionMonth === month && sessionYear === year;
+                });
+            }
+            
+            getCurrentMonthSessions() {
+                const now = new Date();
+                return this.getStudentSessionsForMonth(now.getMonth() + 1, now.getFullYear());
+            }
+            
+            getMonthSummary(sessions) {
+                if (sessions.length === 0) {
+                    return {
+                        totalStudents: 0,
+                        totalSessions: 0,
+                        totalQuestions: 0,
+                        totalCorrect: 0,
+                        averageAccuracy: 0,
+                        averageScore10: 0,
+                        averageScore100: 0
+                    };
+                }
+                
+                const uniqueStudents = new Set(sessions.map(s => `${s.name}_${s.class}`)).size;
+                const totalSessions = sessions.length;
+                const totalQuestions = sessions.reduce((sum, s) => sum + s.totalQuestions, 0);
+                const totalCorrect = sessions.reduce((sum, s) => sum + s.correctAnswers, 0);
+                const averageAccuracy = Math.round(sessions.reduce((sum, s) => sum + s.accuracy, 0) / sessions.length);
+                const averageScore10 = Math.round((sessions.reduce((sum, s) => sum + s.score10, 0) / sessions.length) * 100) / 100;
+                const averageScore100 = Math.round(sessions.reduce((sum, s) => sum + s.score100, 0) / sessions.length);
+                
+                return {
+                    totalStudents: uniqueStudents,
+                    totalSessions: totalSessions,
+                    totalQuestions: totalQuestions,
+                    totalCorrect: totalCorrect,
+                    averageAccuracy: averageAccuracy,
+                    averageScore10: averageScore10,
+                    averageScore100: averageScore100
+                };
+            }
+            
+            getGlobalAccuracy() {
+                return this.stats.totalQuestions > 0 ? 
+                    Math.round((this.stats.totalCorrect / this.stats.totalQuestions) * 100) : 0;
+            }
+            
+			getAverageTime(stats) {
+				if (!stats || stats.totalGames == 0) return "00:00";
+				const avgSeconds = Math.floor(stats.totalTime / stats.totalGames / 1000);
+				const minutes = Math.floor(avgSeconds / 60);
+				const seconds = avgSeconds % 60;
+				return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+			}
+            
+			async updateDisplay() {
+				try {
+					const res = await fetch(API_URL);
+					const stats = await res.json();
+					document.getElementById('totalVisits').textContent = stats.totalVisits || 0;
+					document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
+					document.getElementById('totalGames').textContent = stats.totalGames || 0;
+					document.getElementById('totalQuestions').textContent = stats.totalQuestions || 0;
+					document.getElementById('totalCorrect').textContent = stats.totalCorrect || 0;
+					document.getElementById('globalAccuracy').textContent = 
+						stats.totalQuestions > 0 ? Math.round((stats.totalCorrect / stats.totalQuestions) * 100) + "%" : "0%";
+					document.getElementById('avgTime').textContent = this.getAverageTime(stats);
+					document.getElementById('highScore').textContent = stats.highScore || 0;
+					document.getElementById('todayVisits').textContent = stats.todayVisits || 0;
+					document.getElementById('currentStreak').textContent = stats.currentStreak || 0;
+				} catch (e) {
+					console.error("Không thể tải thống kê:", e);
+				}
+			}
+
+            exportStats() {
+                return {
+                    summary: {
+                        totalVisits: this.stats.totalVisits,
+                        totalUsers: this.stats.totalUsers,
+                        totalGames: this.stats.totalGames,
+                        totalQuestions: this.stats.totalQuestions,
+                        globalAccuracy: this.getGlobalAccuracy(),
+                        averageTime: this.getAverageTime(),
+                        highScore: this.stats.highScore,
+                        currentStreak: this.stats.currentStreak
+                    },
+                    dailyStats: this.stats.dailyStats,
+                    topUsers: this.getTopUsers()
+                };
+            }
+            
+            getTopUsers() {
+                return Object.values(this.stats.userSessions)
+                    .sort((a, b) => b.bestScore - a.bestScore)
+                    .slice(0, 10)
+                    .map(user => ({
+                        name: user.name,
+                        class: user.class,
+                        bestScore: user.bestScore,
+                        accuracy: user.totalQuestions > 0 ? 
+                            Math.round((user.totalCorrect / user.totalQuestions) * 100) : 0
+                    }));
+            }
         }
-      }
-
-      saveStats() {
-        fetch(API_URL, {
-          method: "POST",
-          body: new URLSearchParams({
-            action: "updateGlobal",
-            totalVisits: this.stats.totalVisits,
-            totalUsers: this.stats.totalUsers,
-            totalGames: this.stats.totalGames,
-            totalQuestions: this.stats.totalQuestions,
-            totalCorrect: this.stats.totalCorrect,
-            highScore: this.stats.highScore,
-            totalTime: this.stats.totalTime,
-            todayVisits: this.stats.todayVisits,
-            currentStreak: this.stats.currentStreak,
-            lastStreakDate: this.stats.lastStreakDate
-          })
+        
+        // Initialize statistics when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            statsManager = new StatisticsManager();
         });
-      }
-
-      async updateDisplay() {
-        try {
-          const res = await fetch(API_URL);
-          const stats = await res.json();
-          document.getElementById('totalVisits').textContent = stats.totalVisits || 0;
-          document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
-          document.getElementById('totalGames').textContent = stats.totalGames || 0;
-          document.getElementById('totalQuestions').textContent = stats.totalQuestions || 0;
-          document.getElementById('totalCorrect').textContent = stats.totalCorrect || 0;
-          document.getElementById('globalAccuracy').textContent =
-            stats.totalQuestions > 0 ? Math.round((stats.totalCorrect / stats.totalQuestions) * 100) + "%" : "0%";
-          document.getElementById('avgTime').textContent = this.getAverageTime(stats);
-          document.getElementById('highScore').textContent = stats.highScore || 0;
-          document.getElementById('todayVisits').textContent = stats.todayVisits || 0;
-          document.getElementById('currentStreak').textContent = stats.currentStreak || 0;
-        } catch (e) {
-          console.error("Lỗi updateDisplay:", e);
+        
+        function startGame(event) {
+            event.preventDefault();
+            
+            studentName = document.getElementById('studentName').value.trim();
+            studentClass = document.getElementById('studentClass').value.trim();
+            
+            if (!studentName || !studentClass) {
+                alert('Vui lòng nhập đầy đủ thông tin!');
+                return;
+            }
+            
+            // Track user and game start
+            if (statsManager) {
+                statsManager.trackUser(studentName, studentClass);
+                statsManager.trackGameStart();
+            }
+            
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('gamePage').style.display = 'block';
+            document.getElementById('playerInfo').textContent = `${studentName} - ${studentClass}`;
+            
+            game = new PhysicsGame();
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
         }
-      }
 
-      getAverageTime(stats) {
-        if (!stats || stats.totalGames == 0) return "00:00";
-        const avgSeconds = Math.floor(stats.totalTime / stats.totalGames / 1000);
-        const minutes = Math.floor(avgSeconds / 60);
-        const seconds = avgSeconds % 60;
-        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      }
-    }
-
-    // Hàm lưu session học sinh
-    function saveStudentSession(studentName, studentClass, score, totalQuestions, timeSpent) {
-      const today = new Date();
-      const dateStr = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
-
-      const correctAnswers = score;
-      const wrongAnswers = totalQuestions - score;
-      const accuracy = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
-      const score10 = Math.round((accuracy / 100) * 10 * 100) / 100;
-      const score100 = accuracy;
-
-      fetch(API_URL, {
-        method: "POST",
-        body: new URLSearchParams({
-          action: "addSession",
-          name: studentName,
-          class: studentClass,
-          date: dateStr,
-          accessCount: 1,
-          totalQuestions: totalQuestions,
-          correctAnswers: correctAnswers,
-          wrongAnswers: wrongAnswers,
-          accuracy: accuracy,
-          score10: score10,
-          score100: score100,
-          timeSpent: timeSpent
-        })
-      });
-    }
-
-    // Khởi động
-    const statsManager = new StatisticsManager();
-    statsManager.updateDisplay();
-  </script>
-</body>
+        class PhysicsGame {
+            constructor() {
+                this.canvas = document.getElementById('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.mathOverlay = document.getElementById('mathOverlay');
+                this.resizeCanvas();
+                
+                this.score = 0;
+                this.total = 0;
+                this.questionNumber = 0;
+                this.questionType = null;
+                this.knownValues = {};
+                this.correctAnswer = null;
+                this.userAnswer = null;
+                this.gameActive = false;
+                this.examFinished = false;
+                
+                this.startTime = null;
+                this.timerInterval = null;
+                this.elapsedTime = 0;
+                this.timerStarted = false;
+                
+                window.addEventListener('resize', () => this.resizeCanvas());
+                this.drawWelcome();
+                this.updateTimerDisplay();
+            }
+            
+            resizeCanvas() {
+                const container = this.canvas.parentElement;
+                this.canvas.width = container.clientWidth;
+                this.canvas.height = container.clientHeight;
+                this.centerX = this.canvas.width / 2;
+                this.centerY = this.canvas.height / 2;
+            }
+            
+            clearMathOverlay() {
+                this.mathOverlay.innerHTML = '';
+            }
+            
+            addMathLabel(x, y, mathText, className = '') {
+                const label = document.createElement('div');
+                label.className = `math-label ${className}`;
+                label.style.left = `${x}px`;
+                label.style.top = `${y}px`;
+                label.innerHTML = mathText;
+                this.mathOverlay.appendChild(label);
+                
+                if (window.MathJax) {
+                    MathJax.typesetPromise([label]);
+                }
+                
+                return label;
+            }
+            
+            drawWelcome() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.clearMathOverlay();
+                
+                const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
+                gradient.addColorStop(0, '#f7fafc');
+                gradient.addColorStop(1, '#edf2f7');
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.ctx.fillStyle = '#2d3748';
+                this.ctx.font = 'bold 28px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('🧲⚡ Quy tắc bàn tay trái - Xác định lực từ', this.centerX, this.centerY - 30);
+                
+                this.ctx.font = '18px Arial';
+                this.ctx.fillStyle = '#4a5568';
+                this.ctx.fillText('Nhấn "Câu hỏi mới" để bắt đầu', this.centerX, this.centerY + 15);
+            }
+            
+            newQuestion() {
+                if (this.examFinished) return;
+                
+                const directions = ['up', 'down', 'left', 'right', 'out', 'in'];
+                
+                this.questionType = 'findF';
+                this.questionNumber++;
+                
+                const value1 = directions[Math.floor(Math.random() * directions.length)];
+                const value2 = directions[Math.floor(Math.random() * directions.length)];
+                
+                this.knownValues = { B: value1, I: value2 };
+                this.correctAnswer = this.calculateF(value2, value1);
+                
+                this.userAnswer = null;
+                this.gameActive = true;
+                
+                if (!this.timerStarted) {
+                    this.startTimer();
+                    this.timerStarted = true;
+                }
+                
+                document.getElementById('checkBtn').disabled = true;
+                document.getElementById('message').innerHTML = '';
+                document.getElementById('questionSection').style.display = 'block';
+                
+                document.querySelectorAll('.answer-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                this.updateQuestionDisplay();
+                this.updateAnswerPalette();
+                this.drawQuestion();
+            }
+            
+            updateQuestionDisplay() {
+                document.getElementById('questionTitle').textContent = `Câu ${this.questionNumber}: Tìm hướng lực từ $\\vec{F}$`;
+                
+                document.getElementById('known1').innerHTML = `$\\vec{B}$: ${this.getDirectionName(this.knownValues.B)}`;
+                document.getElementById('known2').innerHTML = `I: ${this.getDirectionName(this.knownValues.I)}`;
+                document.getElementById('unknown').innerHTML = `Tìm: $\\vec{F}$ = ?`;
+                
+                if (window.MathJax) {
+                    MathJax.typesetPromise([document.getElementById('questionSection')]);
+                }
+            }
+            
+            updateAnswerPalette() {
+                document.getElementById('answerTitle').innerHTML = '🎯 Chọn hướng $\\vec{F}$';
+                document.getElementById('zeroOption').innerHTML = '$\\vec{F} = 0$';
+                
+                if (window.MathJax) {
+                    MathJax.typesetPromise([document.querySelector('.left-panel')]);
+                }
+            }
+            
+            calculateF(I, B) {
+                const parallel = {
+                    'up-down': true, 'down-up': true, 'left-right': true, 'right-left': true,
+                    'out-in': true, 'in-out': true, 'up-up': true, 'down-down': true,
+                    'left-left': true, 'right-right': true, 'out-out': true, 'in-in': true
+                };
+                
+                if (parallel[`${I}-${B}`]) return 'zero';
+                
+                const rules = {
+                    'right-up': 'out', 'right-down': 'in', 'right-out': 'down', 'right-in': 'up',
+                    'left-up': 'in', 'left-down': 'out', 'left-out': 'up', 'left-in': 'down',
+                    'up-left': 'out', 'up-right': 'in', 'up-out': 'right', 'up-in': 'left',
+                    'down-left': 'in', 'down-right': 'out', 'down-out': 'left', 'down-in': 'right',
+                    'out-up': 'left', 'out-down': 'right', 'out-left': 'down', 'out-right': 'up',
+                    'in-up': 'right', 'in-down': 'left', 'in-left': 'up', 'in-right': 'down'
+                };
+                
+                return rules[`${I}-${B}`] || 'zero';
+            }
+            
+            drawQuestion() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.clearMathOverlay();
+                
+                this.drawBackground();
+                this.drawKnownVectors();
+                
+                if (this.userAnswer) {
+                    this.drawUserAnswer();
+                }
+            }
+            
+            drawBackground() {
+                const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
+                gradient.addColorStop(0, '#f7fafc');
+                gradient.addColorStop(1, '#edf2f7');
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+            
+            drawKnownVectors() {
+                this.drawMagneticField(this.knownValues.B);
+                this.drawCurrent(this.knownValues.I);
+            }
+            
+            drawMagneticField(direction) {
+                const bgColors = {
+                    'out': '#fee2e2', 'in': '#dbeafe', 'up': '#f0fff4',
+                    'down': '#f0fff4', 'left': '#fef5e7', 'right': '#fef5e7'
+                };
+                
+                this.ctx.fillStyle = bgColors[direction] || '#f8fafc';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                const spacing = 60;
+                const symbolSize = 16;
+                
+                for (let x = spacing; x < this.canvas.width; x += spacing) {
+                    for (let y = spacing; y < this.canvas.height; y += spacing) {
+                        if (Math.abs(x - this.centerX) > 80 || Math.abs(y - this.centerY) > 80) {
+                            this.drawMagneticFieldSymbol(x, y, direction, symbolSize);
+                        }
+                    }
+                }
+                
+                // Draw B vector at left center position
+                const bX = 100;
+                const bY = this.centerY;
+                this.drawVector(direction, 'B', '#2563eb', bX, bY);
+            }
+            
+            drawMagneticFieldSymbol(x, y, direction, size) {
+                this.ctx.save();
+                this.ctx.font = `${size}px Arial`;
+                this.ctx.textAlign = 'center';
+                this.ctx.globalAlpha = 0.2;
+                
+                const colors = {
+                    'out': '#dc2626', 'in': '#2563eb', 'up': '#059669',
+                    'down': '#059669', 'left': '#d97706', 'right': '#d97706'
+                };
+                
+                const symbols = {
+                    'out': '●', 'in': '×', 'up': '↑',
+                    'down': '↓', 'left': '←', 'right': '→'
+                };
+                
+                this.ctx.fillStyle = colors[direction];
+                this.ctx.fillText(symbols[direction], x, y + size/3);
+                this.ctx.restore();
+            }
+            
+            drawCurrent(direction) {
+                const wireLength = 200;
+                
+                if (['left', 'right'].includes(direction)) {
+                    this.ctx.strokeStyle = '#1f2937';
+                    this.ctx.lineWidth = 14;
+                    this.ctx.lineCap = 'round';
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.centerX - wireLength/2, this.centerY);
+                    this.ctx.lineTo(this.centerX + wireLength/2, this.centerY);
+                    this.ctx.stroke();
+                    
+                    this.ctx.strokeStyle = '#10b981';
+                    this.ctx.fillStyle = '#10b981';
+                    this.ctx.lineWidth = 5;
+                    
+                    if (direction === 'right') {
+                        this.drawArrow(this.centerX - 40, this.centerY, this.centerX + 40, this.centerY, true);
+                    } else {
+                        this.drawArrow(this.centerX + 40, this.centerY, this.centerX - 40, this.centerY, true);
+                    }
+                    
+                    this.addMathLabel(this.centerX - 10, this.centerY - 50, 'I', 'current');
+                    
+                } else if (['up', 'down'].includes(direction)) {
+                    this.ctx.strokeStyle = '#1f2937';
+                    this.ctx.lineWidth = 14;
+                    this.ctx.lineCap = 'round';
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.centerX, this.centerY - wireLength/2);
+                    this.ctx.lineTo(this.centerX, this.centerY + wireLength/2);
+                    this.ctx.stroke();
+                    
+                    this.ctx.strokeStyle = '#10b981';
+                    this.ctx.fillStyle = '#10b981';
+                    this.ctx.lineWidth = 5;
+                    
+                    if (direction === 'down') {
+                        this.drawArrow(this.centerX, this.centerY - 40, this.centerX, this.centerY + 40, true);
+                    } else {
+                        this.drawArrow(this.centerX, this.centerY + 40, this.centerX, this.centerY - 40, true);
+                    }
+                    
+                    this.addMathLabel(this.centerX - 50, this.centerY - 10, 'I', 'current');
+                    
+                } else {
+                    this.ctx.fillStyle = '#1f2937';
+                    this.ctx.beginPath();
+                    this.ctx.arc(this.centerX, this.centerY, 25, 0, 2 * Math.PI);
+                    this.ctx.fill();
+                    
+                    this.ctx.fillStyle = 'white';
+                    this.ctx.font = 'bold 30px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText(direction === 'out' ? '●' : '×', this.centerX, this.centerY + 10);
+                    
+                    this.addMathLabel(this.centerX - 10, this.centerY - 50, 'I', 'current');
+                }
+            }
+            
+            drawVector(direction, label, color, x, y, isCorrectAnswer = false) {
+                this.ctx.strokeStyle = color;
+                this.ctx.fillStyle = color;
+                this.ctx.lineWidth = 5;
+                
+                const length = 70;
+                let labelX, labelY;
+                let className = label === 'F' ? (isCorrectAnswer ? 'force-correct' : 'force-user') : 
+                               label === 'B' ? '' : 'current';
+                
+                if (isCorrectAnswer) {
+                    className = 'force-correct';
+                }
+                
+                switch(direction) {
+                    case 'up':
+                        this.drawArrow(x, y, x, y - length, true);
+                        labelX = x + 20;
+                        labelY = y - length - 10;
+                        break;
+                    case 'down':
+                        this.drawArrow(x, y, x, y + length, true);
+                        labelX = x + 20;
+                        labelY = y + length + 35;
+                        break;
+                    case 'left':
+                        this.drawArrow(x, y, x - length, y, true);
+                        labelX = x - length - 50;
+                        labelY = y - 10;
+                        break;
+                    case 'right':
+                        this.drawArrow(x, y, x + length, y, true);
+                        labelX = x + length + 20;
+                        labelY = y - 10;
+                        break;
+                    case 'out':
+                        this.ctx.beginPath();
+                        this.ctx.arc(x, y, 18, 0, 2 * Math.PI);
+                        this.ctx.fill();
+                        this.ctx.fillStyle = 'white';
+                        this.ctx.font = 'bold 24px Arial';
+                        this.ctx.textAlign = 'center';
+                        this.ctx.fillText('●', x, y + 8);
+                        labelX = x + 30;
+                        labelY = y - 30;
+                        break;
+                    case 'in':
+                        this.ctx.beginPath();
+                        this.ctx.arc(x, y, 18, 0, 2 * Math.PI);
+                        this.ctx.fill();
+                        this.ctx.fillStyle = 'white';
+                        this.ctx.font = 'bold 24px Arial';
+                        this.ctx.textAlign = 'center';
+                        this.ctx.fillText('×', x, y + 8);
+                        labelX = x + 30;
+                        labelY = y - 30;
+                        break;
+                    case 'zero':
+                        this.ctx.font = 'bold 28px Arial';
+                        this.ctx.textAlign = 'center';
+                        this.ctx.fillText('0', x, y + 10);
+                        labelX = x + 30;
+                        labelY = y - 30;
+                        break;
+                }
+                
+                const mathText = `$\\vec{${label}}$`;
+                this.addMathLabel(labelX, labelY, mathText, className);
+            }
+            
+            drawArrow(fromX, fromY, toX, toY, withHead = true) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(fromX, fromY);
+                this.ctx.lineTo(toX, toY);
+                this.ctx.stroke();
+                
+                if (withHead) {
+                    const headLength = 18;
+                    const angle = Math.atan2(toY - fromY, toX - fromX);
+                    
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(toX, toY);
+                    this.ctx.lineTo(
+                        toX - headLength * Math.cos(angle - Math.PI/6),
+                        toY - headLength * Math.sin(angle - Math.PI/6)
+                    );
+                    this.ctx.moveTo(toX, toY);
+                    this.ctx.lineTo(
+                        toX - headLength * Math.cos(angle + Math.PI/6),
+                        toY - headLength * Math.sin(angle + Math.PI/6)
+                    );
+                    this.ctx.stroke();
+                }
+            }
+            
+            drawUserAnswer() {
+                if (!this.userAnswer) return;
+                
+                // Draw user's F answer at wire center position (purple color)
+                this.drawVector(this.userAnswer, 'F', '#8b5cf6', this.centerX, this.centerY, false);
+            }
+            
+            getDirectionName(dir) {
+                const names = {
+                    'up': 'Hướng lên (↑)', 'down': 'Hướng xuống (↓)',
+                    'left': 'Hướng trái (←)', 'right': 'Hướng phải (→)',
+                    'out': 'Ra ngoài (●)', 'in': 'Vào trong (×)',
+                    'zero': 'Bằng 0'
+                };
+                return names[dir];
+            }
+            
+            selectAnswer(direction) {
+                if (!this.gameActive || this.examFinished) return;
+                
+                this.userAnswer = direction;
+                document.getElementById('checkBtn').disabled = false;
+                
+                this.drawQuestion();
+                
+                setTimeout(() => {
+                    this.drawUserAnswer();
+                }, 100);
+                
+                this.showMessage('Đã chọn đáp án! Nhấn "Kiểm tra đáp án"!', 'info');
+            }
+            
+            checkAnswer() {
+                if (!this.gameActive || !this.userAnswer || this.examFinished) return;
+                
+                this.total++;
+                const isCorrect = this.userAnswer === this.correctAnswer;
+                
+                // Track question in statistics
+                if (statsManager) {
+                    statsManager.trackQuestion(isCorrect);
+                }
+                
+                if (isCorrect) {
+                    this.score++;
+                    this.showPopup({
+                        icon: '🎉',
+                        title: 'Chính xác!',
+                        desc: 'Bạn đã áp dụng đúng quy tắc bàn tay trái!',
+                        score: '+1 điểm',
+                        type: 'correct'
+                    });
+                } else {
+                    const correctName = this.correctAnswer === 'zero' ? 'Bằng 0' : this.getDirectionName(this.correctAnswer);
+                    this.showPopup({
+                        icon: '❌',
+                        title: 'Sai rồi!',
+                        desc: `Đáp án đúng: ${correctName}`,
+                        score: '+0 điểm',
+                        type: 'incorrect'
+                    });
+                    
+                    setTimeout(() => {
+                        this.showCorrectAnswer();
+                    }, 500);
+                }
+                
+                this.gameActive = false;
+                this.updateScore();
+            }
+            
+            showCorrectAnswer() {
+                // Show correct F answer at wire center position (red color)
+                this.drawVector(this.correctAnswer, 'F', '#dc2626', this.centerX, this.centerY, true);
+            }
+            
+            showMessage(text, type) {
+                document.getElementById('message').innerHTML = `<div class="message ${type}">${text}</div>`;
+            }
+            
+            showPopup(data) {
+                document.getElementById('popupIcon').textContent = data.icon;
+                document.getElementById('popupTitle').textContent = data.title;
+                document.getElementById('popupTitle').className = `popup-title ${data.type === 'correct' ? 'result-correct' : 'result-incorrect'}`;
+                document.getElementById('popupDesc').innerHTML = data.desc;
+                document.getElementById('popupScore').textContent = data.score;
+                document.getElementById('resultPopup').classList.add('show');
+            }
+            
+            updateScore() {
+                document.getElementById('score').textContent = this.score;
+                document.getElementById('total').textContent = this.total;
+                const accuracy = this.total > 0 ? Math.round((this.score / this.total) * 100) : 0;
+                document.getElementById('accuracy').textContent = accuracy + '%';
+            }
+            
+            startTimer() {
+                this.startTime = Date.now();
+                this.timerInterval = setInterval(() => {
+                    this.elapsedTime = Date.now() - this.startTime;
+                    this.updateTimerDisplay();
+                }, 1000);
+            }
+            
+            stopTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+            }
+            
+            updateTimerDisplay() {
+                if (!this.timerStarted) {
+                    document.getElementById('timerDisplay').textContent = '00:00';
+                    return;
+                }
+                
+                const totalSeconds = Math.floor(this.elapsedTime / 1000);
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                document.getElementById('timerDisplay').textContent = timeString;
+            }
+            
+            getFormattedTime() {
+                const totalSeconds = Math.floor(this.elapsedTime / 1000);
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            finishExam() {
+                if (this.examFinished) return;
+                
+                // Stop the game immediately
+                this.gameActive = false;
+                this.examFinished = true;
+                this.stopTimer();
+                
+                // Track game end in statistics
+                if (statsManager) {
+                    statsManager.trackGameEnd(this.score, this.total, this.elapsedTime);
+                }
+                
+                // Disable all interactive elements
+                document.getElementById('checkBtn').disabled = true;
+                document.querySelectorAll('.btn-primary, .btn-warning').forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'not-allowed';
+                });
+                
+                document.querySelectorAll('.answer-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.style.pointerEvents = 'none';
+                    opt.style.opacity = '0.4';
+                    opt.style.cursor = 'not-allowed';
+                });
+                
+                // Show final results
+                this.showFinalResults();
+            }
+            
+            showFinalResults() {
+                const accuracy = this.total > 0 ? Math.round((this.score / this.total) * 100) : 0;
+                
+                document.getElementById('finalResultsStudent').textContent = `Học sinh: ${studentName} - ${studentClass}`;
+                document.getElementById('finalTotal').textContent = this.total;
+                document.getElementById('finalCorrect').textContent = this.score;
+                document.getElementById('finalAccuracy').textContent = accuracy + '%';
+                document.getElementById('finalTime').textContent = this.getFormattedTime();
+                
+                // Set message and style based on performance
+                const messageElement = document.getElementById('finalMessage');
+                let message = '';
+                let messageClass = '';
+                
+                if (accuracy >= 80) {
+                    message = '🎉 Xuất sắc! Em đã làm rất tốt 👏';
+                    messageClass = 'excellent';
+                } else if (accuracy >= 50) {
+                    message = '💪 Khá tốt, em cần cố gắng thêm 💪';
+                    messageClass = 'good';
+                } else {
+                    message = '🌱 Chưa đạt, em hãy luyện tập thêm nhé 🌱';
+                    messageClass = 'needs-improvement';
+                }
+                
+                messageElement.textContent = message;
+                messageElement.className = `final-message ${messageClass}`;
+                
+                document.getElementById('finalResultsPopup').classList.add('show');
+            }
+            
+            reset() {
+                this.score = 0;
+                this.total = 0;
+                this.questionNumber = 0;
+                this.gameActive = false;
+                this.userAnswer = null;
+                this.examFinished = false;
+                
+                this.stopTimer();
+                this.timerStarted = false;
+                this.elapsedTime = 0;
+                
+                document.querySelectorAll('.btn-primary, .btn-warning').forEach(btn => {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                });
+                
+                document.querySelectorAll('.answer-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.style.pointerEvents = 'auto';
+                    opt.style.opacity = '1';
+                    opt.style.cursor = 'pointer';
+                });
+                
+                this.updateScore();
+                this.updateTimerDisplay();
+                document.getElementById('message').innerHTML = '';
+                document.getElementById('checkBtn').disabled = true;
+                document.getElementById('questionSection').style.display = 'none';
+                
+                this.clearMathOverlay();
+                this.drawWelcome();
+            }
+        }
+        
+        // Global functions
+        function selectAnswer(direction) {
+            if (!game) return;
+            
+            document.querySelectorAll('.answer-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            event.target.classList.add('selected');
+            
+            game.selectAnswer(direction);
+        }
+        
+        function newQuestion() {
+            if (game) game.newQuestion();
+        }
+        
+        function checkAnswer() {
+            if (game) game.checkAnswer();
+        }
+        
+        function finishExam() {
+            if (game) {
+                game.finishExam();
+            }
+        }
+        
+        function resetGame() {
+            if (game) game.reset();
+        }
+        
+        function closePopup() {
+            document.getElementById('resultPopup').classList.remove('show');
+        }
+        
+        function closeFinalResults() {
+            document.getElementById('finalResultsPopup').classList.remove('show');
+        }
+        
+        function restartGame() {
+            document.getElementById('finalResultsPopup').classList.remove('show');
+            if (game) {
+                game.reset();
+            }
+        }
+        
+        // Statistics Panel Functions
+        function toggleStats() {
+            const panel = document.getElementById('statsPanel');
+            const toggle = document.getElementById('statsToggle');
+            
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                toggle.textContent = '✖️';
+                toggle.title = 'Đóng thống kê';
+                
+                // Update display when opening
+                if (statsManager) {
+                    statsManager.updateDisplay();
+                }
+            } else {
+                panel.classList.add('hidden');
+                toggle.textContent = '📊';
+                toggle.title = 'Xem thống kê';
+            }
+        }
+        
+        // Export statistics function (for debugging or admin use)
+        function exportStatistics() {
+            if (statsManager) {
+                const stats = statsManager.exportStats();
+                console.log('📊 Game Statistics:', stats);
+                
+                // Create downloadable JSON file
+                const dataStr = JSON.stringify(stats, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `physics-game-stats-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                return stats;
+            }
+        }
+        
+        // Student Statistics Functions
+        function showStudentStats() {
+            if (!statsManager) return;
+            
+            const currentMonth = new Date().getMonth() + 1;
+            const currentYear = new Date().getFullYear();
+            const sessions = statsManager.getCurrentMonthSessions();
+            const summary = statsManager.getMonthSummary(sessions);
+            
+            // Update month display
+            document.getElementById('currentMonth').textContent = `${currentMonth}/${currentYear}`;
+            
+            // Update summary cards
+            const summaryContainer = document.getElementById('statsSummary');
+            summaryContainer.innerHTML = `
+                <div class="summary-card">
+                    <div class="summary-label">👥 Tổng học sinh</div>
+                    <div class="summary-value">${summary.totalStudents}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">🎮 Tổng phiên làm bài</div>
+                    <div class="summary-value">${summary.totalSessions}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">❓ Tổng câu hỏi</div>
+                    <div class="summary-value">${summary.totalQuestions}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">✅ Tổng câu đúng</div>
+                    <div class="summary-value">${summary.totalCorrect}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">📈 Tỷ lệ đúng TB</div>
+                    <div class="summary-value">${summary.averageAccuracy}%</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">🏆 Điểm TB (10)</div>
+                    <div class="summary-value">${summary.averageScore10}</div>
+                </div>
+            `;
+            
+            // Update table
+            const tableBody = document.getElementById('statsTableBody');
+            tableBody.innerHTML = '';
+            
+            if (sessions.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="11" style="text-align: center; padding: 30px; color: #6b7280;">
+                            📝 Chưa có dữ liệu học sinh nào trong tháng này
+                        </td>
+                    </tr>
+                `;
+            } else {
+                // Sort sessions by date (newest first)
+                sessions.sort((a, b) => b.timestamp - a.timestamp);
+                
+                sessions.forEach((session, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // Determine score class for styling
+                    let scoreClass = 'score-needs-improvement';
+                    if (session.accuracy >= 80) scoreClass = 'score-excellent';
+                    else if (session.accuracy >= 50) scoreClass = 'score-good';
+                    
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td style="text-align: left; font-weight: 600;">${session.name}</td>
+                        <td>${session.class}</td>
+                        <td>${session.date}</td>
+                        <td>${session.accessCount}</td>
+                        <td>${session.totalQuestions}</td>
+                        <td style="color: #059669; font-weight: bold;">${session.correctAnswers}</td>
+                        <td style="color: #dc2626; font-weight: bold;">${session.wrongAnswers}</td>
+                        <td class="${scoreClass}">${session.accuracy}%</td>
+                        <td class="${scoreClass}">${session.score10}</td>
+                        <td class="${scoreClass}">${session.score100}</td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            }
+            
+            // Show popup
+            document.getElementById('studentStatsPopup').classList.add('show');
+        }
+        
+        function closeStudentStats() {
+            document.getElementById('studentStatsPopup').classList.remove('show');
+        }
+        
+        function exportCSV() {
+            if (!statsManager) {
+                alert('⚠️ Hệ thống thống kê chưa sẵn sàng!');
+                return;
+            }
+            
+            const currentMonth = new Date().getMonth() + 1;
+            const currentYear = new Date().getFullYear();
+            const sessions = statsManager.getCurrentMonthSessions();
+            
+            if (sessions.length === 0) {
+                alert('📝 Không có dữ liệu để xuất trong tháng này!\nHãy làm một vài câu hỏi trước khi xuất dữ liệu.');
+                return;
+            }
+            
+            try {
+                // Create CSV content with UTF-8 BOM
+                let csvContent = '\uFEFF'; // BOM for UTF-8 encoding
+                csvContent += 'STT,Họ tên,Lớp,Ngày,Lượt truy cập,Câu làm,Câu đúng,Câu sai,Tỷ lệ (%),Điểm (10),Điểm (100)\n';
+                
+                // Sort sessions by date (newest first)
+                const sortedSessions = [...sessions].sort((a, b) => b.timestamp - a.timestamp);
+                
+                sortedSessions.forEach((session, index) => {
+                    const row = [
+                        index + 1,
+                        `"${session.name}"`,
+                        `"${session.class}"`,
+                        `"${session.date}"`,
+                        session.accessCount,
+                        session.totalQuestions,
+                        session.correctAnswers,
+                        session.wrongAnswers,
+                        session.accuracy,
+                        session.score10,
+                        session.score100
+                    ].join(',');
+                    csvContent += row + '\n';
+                });
+                
+                // Create blob and download
+                const blob = new Blob([csvContent], { 
+                    type: 'text/csv;charset=utf-8;' 
+                });
+                
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                
+                const fileName = `ThongKe_Thang_${currentMonth.toString().padStart(2, '0')}_${currentYear}.csv`;
+                
+                link.href = url;
+                link.download = fileName;
+                link.style.display = 'none';
+                
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                
+                // Cleanup
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, 100);
+                
+                // Show success message
+                setTimeout(() => {
+                    alert(`📊 Xuất CSV thành công!\n\n📁 Tên file: ${fileName}\n📊 Số bản ghi: ${sessions.length}\n📅 Tháng: ${currentMonth}/${currentYear}\n\n✅ File đã được tải về máy tính của bạn!`);
+                }, 200);
+                
+            } catch (error) {
+                console.error('Lỗi xuất CSV:', error);
+                alert('❌ Có lỗi xảy ra khi xuất file CSV!\nVui lòng thử lại sau.');
+            }
+        }
+        
+        // Console commands for admin/debugging
+        window.gameStats = {
+            export: exportStatistics,
+            view: () => statsManager ? statsManager.exportStats() : null,
+            viewStudents: () => statsManager ? statsManager.getCurrentMonthSessions() : null,
+            exportCSV: exportCSV,
+            reset: () => {
+                if (confirm('⚠️ Bạn có chắc muốn xóa tất cả thống kê?')) {
+                    localStorage.removeItem('physicsGameStats');
+                    localStorage.removeItem('studentGameSessions');
+                    location.reload();
+                }
+            }
+        };
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'971b6ab9d2b98211',t:'MTc1NTYyNTAyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
