@@ -1413,8 +1413,7 @@
                 }
                 
                 // Save detailed student session data
-                this.saveStudentSession(score, totalQuestions, timeSpent);
-                
+                this.saveStudentSession(studentName, studentClass, score, totalQuestions, timeSpent);
                 this.saveStats();
                 this.updateDisplay();
             }
@@ -1434,7 +1433,7 @@
 					body: new URLSearchParams({
 						action: "addSession",
 						name: studentName,
-						class: studentClass,
+						studentClass: studentClass,
 						date: dateStr,
 						accessCount: 1,
 						totalQuestions: totalQuestions,
