@@ -1253,25 +1253,23 @@
 			}
 			
 			saveStats() {
-			fetch(API_URL, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded"
-				},
-				body: new URLSearchParams({
-					action: "updateGlobal",
-					totalVisits: this.stats.totalVisits,
-					totalUsers: this.stats.totalUsers,
-					totalGames: this.stats.totalGames,
-					totalQuestions: this.stats.totalQuestions,
-					totalCorrect: this.stats.totalCorrect,
-					highScore: this.stats.highScore,
-					totalTime: this.stats.totalTime,
-					todayVisits: this.stats.todayVisits,
-					currentStreak: this.stats.currentStreak,
-					lastStreakDate: this.stats.lastStreakDate
-				})
-			});
+				fetch(API_URL, {
+					method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+					body: new URLSearchParams({
+						action: "updateGlobal",
+						totalVisits: this.stats.totalVisits,
+						totalUsers: this.stats.totalUsers,
+						totalGames: this.stats.totalGames,
+						totalQuestions: this.stats.totalQuestions,
+						totalCorrect: this.stats.totalCorrect,
+						highScore: this.stats.highScore,
+						totalTime: this.stats.totalTime,
+						todayVisits: this.stats.todayVisits,
+						currentStreak: this.stats.currentStreak,
+						lastStreakDate: this.stats.lastStreakDate
+					})
+				});
 			}
             
             trackVisit() {
@@ -1340,7 +1338,7 @@
                     this.stats.totalUsers++;
                     this.stats.userSessions[userKey] = {
                         name: name,
-                        class: className,
+                        studentClass: className,
                         firstVisit: Date.now(),
                         sessions: 0,
                         totalQuestions: 0,
@@ -1416,7 +1414,8 @@
                 }
                 
                 // Save detailed student session data
-                this.saveStudentSession(studentName, studentClass, score, totalQuestions, timeSpent);
+                this.saveStudentSession(score, totalQuestions, timeSpent);
+                
                 this.saveStats();
                 this.updateDisplay();
             }
@@ -1431,26 +1430,24 @@
 				const score10 = Math.round((accuracy / 100) * 10 * 100) / 100;
 				const score100 = accuracy;
 
-			fetch(API_URL, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded"
-				},
-				body: new URLSearchParams({
-					action: "addSession",
-					name: studentName,
-					studentClass: studentClass,
-					date: dateStr,
-					accessCount: 1,
-					totalQuestions: totalQuestions,
-					correctAnswers: correctAnswers,
-					wrongAnswers: wrongAnswers,
-					accuracy: accuracy,
-					score10: score10,
-					score100: score100,
-					timeSpent: timeSpent
-				})
-			});
+				fetch(API_URL, {
+					method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+					body: new URLSearchParams({
+						action: "addSession",
+						name: studentName,
+						studentClass: studentClass,
+						date: dateStr,
+						accessCount: 1,
+						totalQuestions: totalQuestions,
+						correctAnswers: correctAnswers,
+						wrongAnswers: wrongAnswers,
+						accuracy: accuracy,
+						score10: score10,
+						score100: score100,
+						timeSpent: timeSpent
+					})
+				});
 			}
             
             loadStudentSessions() {
@@ -1573,7 +1570,7 @@
                     .slice(0, 10)
                     .map(user => ({
                         name: user.name,
-                        class: user.class,
+                        studentClass: user.class,
                         bestScore: user.bestScore,
                         accuracy: user.totalQuestions > 0 ? 
                             Math.round((user.totalCorrect / user.totalQuestions) * 100) : 0
