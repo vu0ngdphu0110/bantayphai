@@ -6,6 +6,8 @@
     <title>🧲⚡ Quy tắc bàn tay trái - Xác định lực từ</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script>
         window.MathJax = {
             tex: {
@@ -13,6 +15,33 @@
                 displayMath: [['$$', '$$'], ['\\[', '\\]']]
             }
         };
+
+        // TODO: Thay thế đoạn cấu hình dưới đây bằng cấu hình của bạn từ Firebase Console
+		  // Import the functions you need from the SDKs you need
+		  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+		  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
+		  // TODO: Add SDKs for Firebase products that you want to use
+		  // https://firebase.google.com/docs/web/setup#available-libraries
+
+		  // Your web app's Firebase configuration
+		  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+		  const firebaseConfig = {
+			apiKey: "AIzaSyC0Tfjqv7EeHZD_uy9o0v5NiDDD47ak5k8",
+			authDomain: "physics-game-stats.firebaseapp.com",
+			projectId: "physics-game-stats",
+			storageBucket: "physics-game-stats.firebasestorage.app",
+			messagingSenderId: "58976681779",
+			appId: "1:58976681779:web:db8a6e48638cad275dc846",
+			measurementId: "G-1XDFVNXKHQ"
+		  };
+
+		  // Initialize Firebase
+		  const app = initializeApp(firebaseConfig);
+		  const analytics = getAnalytics(app);
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
     </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -678,807 +707,585 @@
             <span class="stat-value" id="highScore">0</span>
         </div>
         <button onclick="showStudentStats()" style="width: 100%; padding: 10px; background: #667eea; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px;">Xem thống kê học sinh</button>
-        <button onclick="resetGame()" style="width: 100%; padding: 10px; background: #dc2626; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: not-allowed; margin-top: 10px;">Đặt lại toàn bộ</button>
+        <button onclick="resetGame()" style="width: 100%; padding: 10px; background: #dc2626; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px;">Đặt lại toàn bộ</button>
     </div>
 
     <div class="popup-overlay" id="resultPopup">
         <div class="popup-content">
-            <div class="popup-icon" id="popupIcon"></div>
-            <h2 id="popupTitle"></h2>
-            <p class="popup-desc" id="popupDesc"></p>
-            <div class="popup-score" id="popupScore"></div>
-            <button onclick="closePopup('resultPopup')">Tiếp tục</button>
+            <span class="popup-icon" id="resultIcon"></span>
+            <h2 id="resultTitle"></h2>
+            <p class="popup-score">Điểm: <span id="finalScoreDisplay"></span>/<span id="finalTotalDisplay"></span></p>
+            <button onclick="closeResultPopup()">Tiếp tục</button>
         </div>
     </div>
-    
+
     <div class="popup-overlay" id="finalResultsPopup">
         <div class="popup-content">
-            <h2>Kết quả làm bài</h2>
-            <div class="final-message" id="finalMessage"></div>
+            <h2>🎉 Hoàn thành bài kiểm tra!</h2>
+            <p id="finalMessage" class="final-message"></p>
             <div class="result-summary">
-                <p>
-                    <span class="label">Họ và tên:</span>
-                    <span class="value" id="finalResultsStudent"></span>
-                </p>
-                <p>
-                    <span class="label">Tổng số câu:</span>
-                    <span class="value" id="finalTotal"></span>
-                </p>
-                <p>
-                    <span class="label">Số câu đúng:</span>
-                    <span class="value" id="finalCorrect"></span>
-                </p>
-                <p>
-                    <span class="label">Tỷ lệ chính xác:</span>
-                    <span class="value" id="finalAccuracy"></span>
-                </p>
-                <p>
-                    <span class="label">Thời gian làm bài:</span>
-                    <span class="value" id="finalTime"></span>
-                </p>
+                <p><span class="label">Họ và tên:</span> <span class="value" id="finalName"></span></p>
+                <p><span class="label">Lớp:</span> <span class="value" id="finalClass"></span></p>
+                <p><span class="label">Số câu đúng:</span> <span class="value" id="finalCorrectCount"></span></p>
+                <p><span class="label">Tổng số câu:</span> <span class="value" id="finalTotalCount"></span></p>
+                <p><span class="label">Thời gian:</span> <span class="value" id="finalTime"></span></p>
             </div>
-            <div style="display: flex; gap: 10px;">
-                <button onclick="restartGame()" style="background: #10b981;">Làm lại</button>
-                <button onclick="closePopup('finalResultsPopup')" style="background: #667eea;">Đóng</button>
-            </div>
+            <button onclick="goToLogin()">Làm bài mới</button>
         </div>
     </div>
     
     <div class="popup-overlay" id="studentStatsPopup">
         <div class="popup-content">
             <div class="stats-header">
-                <h2>Thống kê học sinh</h2>
-                <button onclick="exportCSV()">Xuất file CSV</button>
+                <h2>Thống kê chi tiết</h2>
+                <button onclick="exportCSV()">Tải CSV</button>
             </div>
             <div class="stats-table-container">
-                <table>
+                <table id="statsTable">
                     <thead>
                         <tr>
-                            <th>STT</th>
-                            <th>Họ tên</th>
+                            <th>Tên học sinh</th>
                             <th>Lớp</th>
-                            <th>Ngày</th>
-                            <th>Lượt</th>
-                            <th>Câu làm</th>
-                            <th>Câu đúng</th>
-                            <th>Câu sai</th>
-                            <th>Tỷ lệ (%)</th>
-                            <th>Điểm (10)</th>
-                            <th>Điểm (100)</th>
+                            <th>Điểm</th>
+                            <th>Thời gian</th>
+                            <th>Ngày làm</th>
                         </tr>
                     </thead>
-                    <tbody id="statsTableBody">
-                    </tbody>
+                    <tbody>
+                        </tbody>
                 </table>
             </div>
-            <button onclick="closeStudentStats()" style="width: 100%; padding: 10px; background: #667eea; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Đóng</button>
+            <button onclick="closeStudentStatsPopup()">Đóng</button>
         </div>
     </div>
 
-<script>
-    const BIN_ID = '68bbce4dd0ea881f407392a9'; 
-    const MASTER_KEY = '$2a$10$Wi/V/y6zNSMeHCmdKBxWWusA4kN3rcTiTxM63WT4PV689pVZq4Uz'; // Vẫn cần Master Key của bạn
-    const BASE_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const mathOverlay = document.getElementById('mathOverlay');
+        const known1Elem = document.getElementById('known1');
+        const known2Elem = document.getElementById('known2');
+        const unknownElem = document.getElementById('unknown');
+        const answerOptions = document.querySelectorAll('.answer-option');
+        const checkBtn = document.getElementById('checkBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const messageElem = document.getElementById('message');
+        const scoreElem = document.getElementById('score');
+        const totalElem = document.getElementById('total');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const questionTitle = document.getElementById('questionTitle');
 
-    let game;
-    let studentName = '';
-    let studentClass = '';
-    let statsManager;
+        let knowns, unknown, answer, questionCount = 0, correctCount = 0, startTime, timerInterval;
+        let selectedAnswer = null;
 
-    // Statistics Manager Class using JSONbin.io
-    class StatisticsManager {
-        constructor() {
-            this.stats = {};
-            this.userSessions = [];
-            this.initializeStats();
+        let currentPlayer = {};
+
+        // === CLASSES & DATA ===
+        const symbols = {
+            'B': { text: '$B$', color: '#2b5876' }, // Cảm ứng từ
+            'I': { text: '$I$', color: '#4d9f0c' }, // Cường độ dòng điện
+            'F': { text: '$F$', color: '#c41a30' }  // Lực từ
+        };
+
+        const orientations = {
+            'up': { text: 'Lên' },
+            'down': { text: 'Xuống' },
+            'left': { text: 'Trái' },
+            'right': { text: 'Phải' },
+            'in': { text: 'Vào' },
+            'out': { text: 'Ra' },
+            'zero': { text: '= 0' }
+        };
+
+        const allDirections = ['up', 'down', 'left', 'right', 'in', 'out'];
+
+        function getRandomDirection(exclude = []) {
+            let available = allDirections.filter(dir => !exclude.includes(dir));
+            return available[Math.floor(Math.random() * available.length)];
         }
 
-        async initializeStats() {
-            const defaultStats = {
-                totalVisits: 0,
-                totalUsers: 0,
-                totalGames: 0,
-                totalQuestions: 0,
-                totalCorrect: 0,
-                totalTime: 0,
-                highScore: 0,
-                todayVisits: 0,
-                lastVisitDate: null,
-                currentStreak: 0,
-                lastStreakDate: null
-            };
-
-            try {
-                const response = await fetch(`${BASE_URL}/latest`, {
-                    method: 'GET',
-                    headers: {
-                        'X-Master-Key': MASTER_KEY
-                    }
-                });
-                const data = await response.json();
-                this.userSessions = data.record.sessions || [];
-                this.calculateGlobalStats();
-            } catch (error) {
-                console.error('Lỗi khi lấy dữ liệu từ JSONbin:', error);
-                this.userSessions = [];
-            }
-            this.updateDisplay();
-            this.trackVisit();
-            setInterval(() => {
-                this.updateDisplay();
-            }, 30000);
-        }
-
-        calculateGlobalStats() {
-            const stats = {
-                totalVisits: 0,
-                totalUsers: new Set(),
-                totalGames: 0,
-                totalQuestions: 0,
-                totalCorrect: 0,
-                totalTime: 0,
-                highScore: 0,
-                todayVisits: 0,
-                lastVisitDate: new Date().toDateString(),
-                currentStreak: 0,
-                lastStreakDate: null
-            };
-
-            this.userSessions.forEach(session => {
-                stats.totalVisits++;
-                stats.totalUsers.add(session.name);
-                stats.totalGames++;
-                stats.totalQuestions += session.totalQuestions;
-                stats.totalCorrect += session.correctAnswers;
-                stats.highScore = Math.max(stats.highScore, session.score100);
-            });
-
-            stats.totalUsers = stats.totalUsers.size;
-            this.stats = stats;
-        }
-
-        async saveSessions() {
-            try {
-                await fetch(BASE_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': MASTER_KEY
-                    },
-                    body: JSON.stringify({ sessions: this.userSessions })
-                });
-                console.log("Dữ liệu đã được cập nhật thành công lên JSONbin.io");
-            } catch (error) {
-                console.error('Lỗi khi gửi dữ liệu lên JSONbin:', error);
+        // === GAME LOGIC ===
+        function startGame(event) {
+            event.preventDefault();
+            const studentName = document.getElementById('studentName').value;
+            const studentClass = document.getElementById('studentClass').value;
+            if (studentName && studentClass) {
+                currentPlayer = {
+                    name: studentName,
+                    class: studentClass,
+                    start: new Date(),
+                    correct: 0,
+                    total: 0,
+                    score: 0
+                };
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('gamePage').style.display = 'flex';
+                document.getElementById('playerInfo').textContent = `${studentName} - ${studentClass}`;
+                startTimer();
+                newQuestion();
             }
         }
 
-        trackVisit() {
-            this.stats.totalVisits++;
-            this.updateDisplay();
-        }
-
-        trackUser(name, className) {
-            // This is handled by a new session
-        }
-
-        trackGameStart() {
-            this.stats.totalGames++;
-            this.updateDisplay();
-        }
-
-        trackQuestion(isCorrect) {
-            this.stats.totalQuestions++;
-            if (isCorrect) {
-                this.stats.totalCorrect++;
-            }
-            this.updateDisplay();
-        }
-
-        updateDisplay() {
-            document.getElementById('totalVisits').innerText = this.stats.totalVisits;
-            document.getElementById('totalUsers').innerText = this.stats.totalUsers;
-            document.getElementById('totalGames').innerText = this.stats.totalGames;
-            document.getElementById('totalQuestions').innerText = this.stats.totalQuestions;
-            document.getElementById('totalCorrect').innerText = this.stats.totalCorrect;
-            document.getElementById('highScore').innerText = this.stats.highScore;
-
-            if (this.stats.totalQuestions > 0) {
-                const globalAccuracy = (this.stats.totalCorrect / this.stats.totalQuestions * 100).toFixed(1);
-                document.getElementById('globalAccuracy').innerText = `${globalAccuracy}%`;
-            } else {
-                document.getElementById('globalAccuracy').innerText = '0%';
-            }
-        }
-
-        getStudentSessions() {
-            return this.userSessions;
-        }
-
-        addSession(sessionData) {
-            this.userSessions.push(sessionData);
-            this.saveSessions();
-        }
-    }
-
-    class Game {
-        constructor() {
-            this.correct = 0;
-            this.total = 0;
-            this.score = 0;
-            this.isAnswered = false;
-            this.selectedAnswer = '';
-            this.questionData = {};
-            this.startTime = 0;
-            this.timerInterval = null;
-            this.canvas = document.getElementById('canvas');
-            this.ctx = this.canvas.getContext('2d');
-            this.answers = ['up', 'down', 'left', 'right', 'in', 'out', 'zero'];
-            this.vectors = {
-                'up': { x: 0, y: -1, label: '↑ B', color: '#4299e1' },
-                'down': { x: 0, y: 1, label: '↓ B', color: '#4299e1' },
-                'left': { x: -1, y: 0, label: '← B', color: '#4299e1' },
-                'right': { x: 1, y: 0, label: '→ B', color: '#4299e1' },
-                'in': { x: 0, y: 0, label: '× B', color: '#4299e1' },
-                'out': { x: 0, y: 0, label: '● B', color: '#4299e1' }
-            };
-            this.vectorLabels = {
-                'up': 'Lên', 'down': 'Xuống', 'left': 'Trái', 'right': 'Phải', 'in': 'Vào', 'out': 'Ra', 'zero': '= 0'
-            };
+        function finishExam() {
+            clearInterval(timerInterval);
+            const duration = new Date() - currentPlayer.start;
+            const minutes = Math.floor(duration / 60000);
+            const seconds = Math.floor((duration % 60000) / 1000);
             
-            // Initial call
-            this.newQuestion();
-            this.startTimer();
+            currentPlayer.timeTaken = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            currentPlayer.correct = correctCount;
+            currentPlayer.total = questionCount;
+            currentPlayer.score = correctCount;
+            
+            saveSession(currentPlayer);
+            
+            showFinalResults();
         }
 
-        startTimer() {
-            this.startTime = Date.now();
-            this.timerInterval = setInterval(() => {
-                const elapsed = Date.now() - this.startTime;
-                const minutes = Math.floor(elapsed / 60000);
-                const seconds = Math.floor((elapsed % 60000) / 1000);
-                document.getElementById('timerDisplay').innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        function showFinalResults() {
+            document.getElementById('gamePage').style.display = 'none';
+            document.getElementById('finalName').textContent = currentPlayer.name;
+            document.getElementById('finalClass').textContent = currentPlayer.class;
+            document.getElementById('finalCorrectCount').textContent = currentPlayer.correct;
+            document.getElementById('finalTotalCount').textContent = currentPlayer.total;
+            document.getElementById('finalTime').textContent = currentPlayer.timeTaken;
+            
+            const percentage = (currentPlayer.correct / currentPlayer.total) * 100 || 0;
+            const finalMessage = document.getElementById('finalMessage');
+            if (percentage >= 80) {
+                finalMessage.textContent = "Bạn đã làm rất tốt!";
+                finalMessage.className = "final-message excellent";
+            } else if (percentage >= 50) {
+                finalMessage.textContent = "Kết quả tốt, hãy cố gắng hơn nữa!";
+                finalMessage.className = "final-message good";
+            } else {
+                finalMessage.textContent = "Hãy ôn tập lại kiến thức nhé!";
+                finalMessage.className = "final-message needs-improvement";
+            }
+            
+            document.getElementById('finalResultsPopup').classList.add('show');
+        }
+
+        function goToLogin() {
+            document.getElementById('finalResultsPopup').classList.remove('show');
+            document.getElementById('loginPage').style.display = 'flex';
+            resetGameUI();
+        }
+
+        function resetGameUI() {
+            questionCount = 0;
+            correctCount = 0;
+            scoreElem.textContent = 0;
+            totalElem.textContent = 0;
+            timerDisplay.textContent = '00:00';
+            messageElem.style.display = 'none';
+            selectedAnswer = null;
+            newQuestion(); // Bắt đầu lại một câu hỏi mới
+        }
+
+        function startTimer() {
+            startTime = new Date();
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const diff = now - startTime;
+                const minutes = Math.floor(diff / 60000);
+                const seconds = Math.floor((diff % 60000) / 1000);
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }, 1000);
         }
 
-        stopTimer() {
-            clearInterval(this.timerInterval);
-        }
+        function newQuestion() {
+            messageElem.style.display = 'none';
+            nextBtn.style.display = 'none';
+            checkBtn.style.display = 'block';
+            answerOptions.forEach(option => {
+                option.classList.remove('selected', 'correct-answer');
+                option.style.pointerEvents = 'auto';
+            });
+            selectedAnswer = null;
 
-        getElapsedTime() {
-            const elapsed = Date.now() - this.startTime;
-            return Math.floor(elapsed / 1000); // seconds
-        }
+            const quantities = ['B', 'I', 'F'];
+            const known1Key = quantities[Math.floor(Math.random() * 3)];
+            let known2Key;
+            do {
+                known2Key = quantities[Math.floor(Math.random() * 3)];
+            } while (known2Key === known1Key);
+            const unknownKey = quantities.find(q => q !== known1Key && q !== known2Key);
+            
+            questionCount++;
+            questionTitle.textContent = `Câu ${questionCount}: Tìm đại lượng ${symbols[unknownKey].text}`;
+            totalElem.textContent = questionCount;
 
-        drawGrid() {
-            this.canvas.width = this.canvas.offsetWidth;
-            this.canvas.height = this.canvas.offsetHeight;
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.ctx.beginPath();
-            this.ctx.strokeStyle = '#e2e8f0';
-            this.ctx.lineWidth = 1;
-            const size = 50;
-            for (let x = 0; x < this.canvas.width; x += size) {
-                this.ctx.moveTo(x, 0);
-                this.ctx.lineTo(x, this.canvas.height);
-            }
-            for (let y = 0; y < this.canvas.height; y += size) {
-                this.ctx.moveTo(0, y);
-                this.ctx.lineTo(this.canvas.width, y);
-            }
-            this.ctx.stroke();
-        }
+            const known1Dir = getRandomDirection();
+            const known2Dir = getRandomDirection([known1Dir]);
 
-        drawVector(vector, color, label, isCurrent = false) {
-            const center = { x: this.canvas.width / 2, y: this.canvas.height / 2 };
-            const scale = 50;
-            const headlen = 10;
-            const from = { x: center.x, y: center.y };
-            const to = { x: center.x + vector.x * scale, y: center.y + vector.y * scale };
-            
-            this.ctx.beginPath();
-            this.ctx.moveTo(from.x, from.y);
-            this.ctx.lineTo(to.x, to.y);
-            this.ctx.strokeStyle = color;
-            this.ctx.lineWidth = 3;
-            this.ctx.stroke();
-
-            // Arrowhead
-            const angle = Math.atan2(to.y - from.y, to.x - from.x);
-            this.ctx.moveTo(to.x, to.y);
-            this.ctx.lineTo(to.x - headlen * Math.cos(angle - Math.PI / 6), to.y - headlen * Math.sin(angle - Math.PI / 6));
-            this.ctx.moveTo(to.x, to.y);
-            this.ctx.lineTo(to.x - headlen * Math.cos(angle + Math.PI / 6), to.y - headlen * Math.sin(angle + Math.PI / 6));
-            this.ctx.stroke();
-
-            // Label
-            const mathOverlay = document.getElementById('mathOverlay');
-            const labelEl = document.createElement('div');
-            labelEl.className = 'math-label';
-            labelEl.style.left = `${to.x + 10}px`;
-            labelEl.style.top = `${to.y - 20}px`;
-            labelEl.innerText = label;
-            if (label.includes('F')) {
-                labelEl.classList.add('force');
-            } else if (label.includes('I')) {
-                labelEl.classList.add('current');
-            }
-            if (isCurrent) {
-                labelEl.classList.add('force-user');
-            }
-            mathOverlay.appendChild(labelEl);
-        }
-        
-        drawCircularVector(direction, color, label) {
-            const center = { x: this.canvas.width / 2, y: this.canvas.height / 2 };
-            this.ctx.beginPath();
-            this.ctx.arc(center.x, center.y, 20, 0, 2 * Math.PI, false);
-            this.ctx.fillStyle = color;
-            this.ctx.fill();
-            this.ctx.lineWidth = 3;
-            this.ctx.strokeStyle = color;
-            this.ctx.stroke();
-            
-            const mathOverlay = document.getElementById('mathOverlay');
-            const labelEl = document.createElement('div');
-            labelEl.className = 'math-label';
-            labelEl.style.left = `${center.x + 30}px`;
-            labelEl.style.top = `${center.y - 20}px`;
-            labelEl.innerText = label;
-            mathOverlay.appendChild(labelEl);
-            
-            if (direction === 'in') {
-                this.ctx.beginPath();
-                this.ctx.moveTo(center.x - 10, center.y - 10);
-                this.ctx.lineTo(center.x + 10, center.y + 10);
-                this.ctx.moveTo(center.x + 10, center.y - 10);
-                this.ctx.lineTo(center.x - 10, center.y + 10);
-                this.ctx.strokeStyle = 'white';
-                this.ctx.lineWidth = 3;
-                this.ctx.stroke();
-            } else { // out
-                this.ctx.beginPath();
-                this.ctx.arc(center.x, center.y, 5, 0, 2 * Math.PI, false);
-                this.ctx.fillStyle = 'white';
-                this.ctx.fill();
-            }
-        }
-        
-        draw() {
-            this.canvas.width = this.canvas.offsetWidth;
-            this.canvas.height = this.canvas.offsetHeight;
-            this.drawGrid();
-            
-            document.getElementById('mathOverlay').innerHTML = '';
-            
-            const v1 = this.vectors[this.questionData.known1];
-            const v2 = this.vectors[this.questionData.known2];
-            
-            if (v1.x === 0 && v1.y === 0) {
-                this.drawCircularVector(this.questionData.known1, '#4299e1', `B`);
-            } else {
-                this.drawVector(v1, '#4299e1', `B`);
-            }
-            
-            if (v2.x === 0 && v2.y === 0) {
-                this.drawCircularVector(this.questionData.known2, '#10b981', `I`);
-            } else {
-                this.drawVector(v2, '#10b981', `I`);
-            }
-            
-            if (this.selectedAnswer && this.selectedAnswer !== 'zero') {
-                const userVector = this.vectors[this.selectedAnswer];
-                if (userVector.x === 0 && userVector.y === 0) {
-                    this.drawCircularVector(this.selectedAnswer, '#8b5cf6', 'F');
-                } else {
-                    this.drawVector(userVector, '#8b5cf6', 'F');
-                }
-            }
-            
-            if (this.isAnswered) {
-                if (this.questionData.correctAnswer === 'zero') {
-                    const mathOverlay = document.getElementById('mathOverlay');
-                    const labelEl = document.createElement('div');
-                    labelEl.className = 'math-label force-correct';
-                    labelEl.style.left = `${this.canvas.width / 2 - 30}px`;
-                    labelEl.style.top = `${this.canvas.height / 2 - 15}px`;
-                    labelEl.innerText = 'F = 0';
-                    mathOverlay.appendChild(labelEl);
-                } else {
-                    const correctVector = this.vectors[this.questionData.correctAnswer];
-                    if (correctVector.x === 0 && correctVector.y === 0) {
-                        this.drawCircularVector(this.questionData.correctAnswer, '#dc2626', 'F');
-                    } else {
-                        this.drawVector(correctVector, '#dc2626', 'F');
-                    }
-                }
-            }
-        }
-        
-        generateQuestion() {
-            const directions = ['up', 'down', 'left', 'right', 'in', 'out'];
-            let known1 = directions[Math.floor(Math.random() * directions.length)];
-            let known2 = directions[Math.floor(Math.random() * directions.length)];
-            
-            if (known1 === known2) {
-                known2 = directions[(directions.indexOf(known2) + 1) % directions.length];
-            }
-            
-            const v1 = this.vectors[known1];
-            const v2 = this.vectors[known2];
-            
-            const isParallel = (v1.x * v2.y) === (v1.y * v2.x) && (v1.x * v2.x) >= 0 && (v1.y * v2.y) >= 0;
-            const isAntiParallel = (v1.x * v2.y) === (v1.y * v2.x) && (v1.x * v2.x) <= 0 && (v1.y * v2.y) <= 0;
-            
-            let correctAnswer;
-            if (isParallel || isAntiParallel) {
-                correctAnswer = 'zero';
-            } else {
-                const v1_ = this.get3DVector(known1);
-                const v2_ = this.get3DVector(known2);
-                
-                const crossX_ = v1_.y * v2_.z - v1_.z * v2_.y;
-                const crossY_ = v1_.z * v2_.x - v1_.x * v2_.z;
-                const crossZ_ = v1_.x * v2_.y - v1_.y * v2_.x;
-                
-                if (crossX_ === 0 && crossY_ === 0 && crossZ_ === 0) {
-                    correctAnswer = 'zero';
-                } else {
-                    if (crossX_ === 1) correctAnswer = 'right';
-                    else if (crossX_ === -1) correctAnswer = 'left';
-                    else if (crossY_ === 1) correctAnswer = 'down';
-                    else if (crossY_ === -1) correctAnswer = 'up';
-                    else if (crossZ_ === 1) correctAnswer = 'out';
-                    else if (crossZ_ === -1) correctAnswer = 'in';
-                }
-            }
-
-            const unknownType = ['B', 'I', 'F'][Math.floor(Math.random() * 3)];
-            let known1Type, known2Type, unknownLabel;
-
-            if (unknownType === 'B') {
-                known1Type = 'I';
-                known2Type = 'F';
-                unknownLabel = 'B';
-                correctAnswer = this.getInverseVector(known2, known1);
-            } else if (unknownType === 'I') {
-                known1Type = 'B';
-                known2Type = 'F';
-                unknownLabel = 'I';
-                correctAnswer = this.getInverseVector(known1, known2);
-            } else { // F
-                known1Type = 'B';
-                known2Type = 'I';
-                unknownLabel = 'F';
-                correctAnswer = this.getCrossProductVector(known1, known2);
-            }
-            
-            if (Math.random() > 0.5) {
-                [known1, known2] = [known2, known1];
-                [known1Type, known2Type] = [known2Type, known1Type];
-            }
-
-            this.questionData = {
-                known1: known1,
-                known2: known2,
-                correctAnswer: correctAnswer,
-                unknownLabel: unknownLabel,
-                known1Type: known1Type,
-                known2Type: known2Type
+            knowns = {
+                [known1Key]: known1Dir,
+                [known2Key]: known2Dir
             };
-            
-            document.getElementById('questionTitle').innerText = `Câu ${this.total + 1}: Tìm đại lượng chưa biết`;
-            document.getElementById('known1').innerHTML = `\\($\\vec{${known1Type}}$ = ${this.vectorLabels[known1]}\\)`;
-            document.getElementById('known2').innerHTML = `\\($\\vec{${known2Type}}$ = ${this.vectorLabels[known2]}\\)`;
-            document.getElementById('unknown').innerHTML = `\\(Cần tìm: \\vec{${unknownLabel}}\\)`;
-            
-            MathJax.typeset();
-            
-            this.draw();
+            unknown = unknownKey;
+
+            drawCanvas(knowns);
+            renderKnowns();
+            renderQuestion();
+        }
+
+        function renderKnowns() {
+            const keys = Object.keys(knowns);
+            known1Elem.innerHTML = `Hướng của ${symbols[keys[0]].text}: ${orientations[knowns[keys[0]]].text}`;
+            known2Elem.innerHTML = `Hướng của ${symbols[keys[1]].text}: ${orientations[knowns[keys[1]]].text}`;
         }
         
-        get3DVector(direction) {
-            switch(direction) {
-                case 'up': return {x: 0, y: -1, z: 0};
-                case 'down': return {x: 0, y: 1, z: 0};
-                case 'left': return {x: -1, y: 0, z: 0};
-                case 'right': return {x: 1, y: 0, z: 0};
-                case 'in': return {x: 0, y: 0, z: -1};
-                case 'out': return {x: 0, y: 0, z: 1};
-                default: return {x: 0, y: 0, z: 0};
+        function renderQuestion() {
+            unknownElem.innerHTML = `Xác định hướng của ${symbols[unknown].text} ?`;
+        }
+
+        function drawCanvas(knowns) {
+            canvas.width = 300;
+            canvas.height = 300;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const center = { x: canvas.width / 2, y: canvas.height / 2 };
+            const length = 100;
+            const arrowSize = 10;
+            const offset = 40;
+
+            const positions = {
+                'I': { x: center.x, y: center.y - offset },
+                'B': { x: center.x - offset, y: center.y },
+                'F': { x: center.x, y: center.y + offset }
+            };
+
+            const drawArrow = (start, direction, color) => {
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 3;
+                
+                let end = { x: start.x, y: start.y };
+                let angle = 0;
+                let headPoints = [];
+
+                switch (direction) {
+                    case 'up':
+                        end.y -= length;
+                        angle = -Math.PI / 2;
+                        break;
+                    case 'down':
+                        end.y += length;
+                        angle = Math.PI / 2;
+                        break;
+                    case 'left':
+                        end.x -= length;
+                        angle = Math.PI;
+                        break;
+                    case 'right':
+                        end.x += length;
+                        angle = 0;
+                        break;
+                    case 'in':
+                        ctx.arc(start.x, start.y, 10, 0, 2 * Math.PI);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(start.x - 5, start.y - 5);
+                        ctx.lineTo(start.x + 5, start.y + 5);
+                        ctx.moveTo(start.x + 5, start.y - 5);
+                        ctx.lineTo(start.x - 5, start.y + 5);
+                        ctx.stroke();
+                        return;
+                    case 'out':
+                        ctx.beginPath();
+                        ctx.arc(start.x, start.y, 10, 0, 2 * Math.PI);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(start.x, start.y, 5, 0, 2 * Math.PI);
+                        ctx.stroke();
+                        return;
+                    case 'zero':
+                        return;
+                }
+
+                ctx.moveTo(start.x, start.y);
+                ctx.lineTo(end.x, end.y);
+                ctx.stroke();
+
+                // Draw arrowhead
+                ctx.beginPath();
+                ctx.fillStyle = color;
+                headPoints.push([
+                    end.x + arrowSize * Math.cos(angle - Math.PI / 6),
+                    end.y + arrowSize * Math.sin(angle - Math.PI / 6)
+                ]);
+                headPoints.push([
+                    end.x,
+                    end.y
+                ]);
+                headPoints.push([
+                    end.x + arrowSize * Math.cos(angle + Math.PI / 6),
+                    end.y + arrowSize * Math.sin(angle + Math.PI / 6)
+                ]);
+                ctx.moveTo(headPoints[0][0], headPoints[0][1]);
+                ctx.lineTo(headPoints[1][0], headPoints[1][1]);
+                ctx.lineTo(headPoints[2][0], headPoints[2][1]);
+                ctx.fill();
+            };
+
+            Object.keys(knowns).forEach(key => {
+                drawArrow(positions[key], knowns[key], symbols[key].color);
+            });
+        }
+
+        function calculateAnswer(knowns) {
+            const [key1, key2] = Object.keys(knowns);
+            const dir1 = knowns[key1];
+            const dir2 = knowns[key2];
+
+            const directions = {
+                'up': { x: 0, y: -1, z: 0 },
+                'down': { x: 0, y: 1, z: 0 },
+                'left': { x: -1, y: 0, z: 0 },
+                'right': { x: 1, y: 0, z: 0 },
+                'in': { x: 0, y: 0, z: 1 },
+                'out': { x: 0, y: 0, z: -1 }
+            };
+
+            const vector1 = directions[dir1];
+            const vector2 = directions[dir2];
+
+            const resultVector = {};
+            if (knowns.I && knowns.B) {
+                resultVector.x = vector2.y * vector1.z - vector2.z * vector1.y;
+                resultVector.y = vector2.z * vector1.x - vector2.x * vector1.z;
+                resultVector.z = vector2.x * vector1.y - vector2.y * vector1.x;
+            } else if (knowns.F && knowns.I) {
+                resultVector.x = vector1.y * vector2.z - vector1.z * vector2.y;
+                resultVector.y = vector1.z * vector2.x - vector1.x * vector2.z;
+                resultVector.z = vector1.x * vector2.y - vector1.y * vector2.x;
+            } else if (knowns.F && knowns.B) {
+                resultVector.x = vector2.y * vector1.z - vector2.z * vector1.y;
+                resultVector.y = vector2.z * vector1.x - vector2.x * vector1.z;
+                resultVector.z = vector2.x * vector1.y - vector2.y * vector1.x;
             }
-        }
-        
-        getVectorFrom3D(vector) {
-            if (vector.x === 1) return 'right';
-            if (vector.x === -1) return 'left';
-            if (vector.y === 1) return 'down';
-            if (vector.y === -1) return 'up';
-            if (vector.z === 1) return 'out';
-            if (vector.z === -1) return 'in';
+
+            if (resultVector.x === 0 && resultVector.y === 0 && resultVector.z === 0) {
+                return 'zero';
+            }
+
+            if (resultVector.y === -1 && resultVector.x === 0 && resultVector.z === 0) return 'up';
+            if (resultVector.y === 1 && resultVector.x === 0 && resultVector.z === 0) return 'down';
+            if (resultVector.x === -1 && resultVector.y === 0 && resultVector.z === 0) return 'left';
+            if (resultVector.x === 1 && resultVector.y === 0 && resultVector.z === 0) return 'right';
+            if (resultVector.z === 1 && resultVector.x === 0 && resultVector.y === 0) return 'in';
+            if (resultVector.z === -1 && resultVector.x === 0 && resultVector.y === 0) return 'out';
+            
             return 'zero';
         }
-        
-        getCrossProductVector(v1Dir, v2Dir) {
-            const v1 = this.get3DVector(v1Dir);
-            const v2 = this.get3DVector(v2Dir);
-            
-            const crossX = v1.y * v2.z - v1.z * v2.y;
-            const crossY = v1.z * v2.x - v1.x * v2.z;
-            const crossZ = v1.x * v2.y - v1.y * v2.x;
-            
-            const resultVector = {x: crossX, y: crossY, z: crossZ};
-            return this.getVectorFrom3D(resultVector);
-        }
-        
-        getInverseVector(v1Dir, v2Dir) {
-            const v1 = this.get3DVector(v1Dir);
-            const v2 = this.get3DVector(v2Dir);
-            
-            const x = v1.y * v2.z - v1.z * v2.y;
-            const y = v1.z * v2.x - v1.x * v2.z;
-            const z = v1.x * v2.y - v1.y * v2.x;
-            
-            const resultVector = {x: x, y: y, z: z};
-            return this.getVectorFrom3D(resultVector);
-        }
 
-        checkAnswer() {
-            if (this.isAnswered) return;
-            this.isAnswered = true;
-            document.getElementById('checkBtn').disabled = true;
-            
-            const isCorrect = this.selectedAnswer === this.questionData.correctAnswer;
-            
-            if (isCorrect) {
-                this.correct++;
-                document.getElementById('popupIcon').innerText = '🎉';
-                document.getElementById('popupTitle').innerText = 'Chính xác!';
-                document.getElementById('popupDesc').innerText = 'Bạn đã áp dụng đúng quy tắc bàn tay trái!';
-                document.getElementById('popupScore').innerText = `+1 điểm`;
-                showMessage('correct', '✅ Đáp án chính xác!');
+        function checkAnswer() {
+            if (!selectedAnswer) {
+                alert('Vui lòng chọn một đáp án.');
+                return;
+            }
+
+            const correctAnswer = calculateAnswer(knowns);
+
+            const selectedOption = document.querySelector(`.answer-option.selected`);
+            if (selectedAnswer === correctAnswer) {
+                correctCount++;
+                scoreElem.textContent = correctCount;
+                messageElem.textContent = 'Chính xác! 🎉';
+                messageElem.className = 'message correct';
+                selectedOption.classList.add('correct-answer');
+                
+                const correctOption = document.querySelector(`.answer-option[onclick="selectAnswer('${correctAnswer}')"]`);
+                if (correctOption) {
+                    correctOption.classList.add('correct-answer');
+                }
             } else {
-                document.getElementById('popupIcon').innerText = '🤔';
-                document.getElementById('popupTitle').innerText = 'Chưa chính xác!';
-                document.getElementById('popupDesc').innerText = `Đáp án đúng là: ${this.vectorLabels[this.questionData.correctAnswer]}`;
-                document.getElementById('popupScore').innerText = `+0 điểm`;
-                showMessage('incorrect', `❌ Đáp án sai. Đáp án đúng là: ${this.vectorLabels[this.questionData.correctAnswer]}`);
+                messageElem.textContent = `Sai rồi. Đáp án đúng là: ${orientations[correctAnswer].text}.`;
+                messageElem.className = 'message incorrect';
+                
+                const correctOption = document.querySelector(`.answer-option[onclick="selectAnswer('${correctAnswer}')"]`);
+                if (correctOption) {
+                    correctOption.classList.add('correct-answer');
+                }
             }
-            
-            this.total++;
-            this.updateScore();
-            this.draw();
-            showPopup('resultPopup');
-            statsManager.trackQuestion(isCorrect);
-        }
-        
-        newQuestion() {
-            this.isAnswered = false;
-            this.selectedAnswer = '';
-            this.generateQuestion();
-            this.resetPalette();
-            document.getElementById('checkBtn').disabled = false;
-            document.getElementById('message').innerHTML = '';
-            document.getElementById('message').style.display = 'none';
+            messageElem.style.display = 'block';
+
+            answerOptions.forEach(option => option.style.pointerEvents = 'none');
+            checkBtn.style.display = 'none';
+            nextBtn.style.display = 'block';
         }
 
-        updateScore() {
-            document.getElementById('score').innerText = this.correct;
-            document.getElementById('total').innerText = this.total;
-            if (this.total > 0) {
-                const accuracy = (this.correct / this.total * 100).toFixed(1);
-                document.getElementById('accuracy').innerText = `${accuracy}%`;
-            } else {
-                document.getElementById('accuracy').innerText = '0%';
-            }
-            this.score = this.correct;
-            if (this.score > statsManager.stats.highScore) {
-                statsManager.stats.highScore = this.score;
-                statsManager.updateDisplay();
+        function selectAnswer(answer) {
+            selectedAnswer = answer;
+            answerOptions.forEach(option => option.classList.remove('selected'));
+            document.querySelector(`.answer-option[onclick="selectAnswer('${answer}')"]`).classList.add('selected');
+        }
+
+        // === FIREBASE & STATISTICS ===
+        
+        async function saveSession(session) {
+            try {
+                const sessionRef = database.ref('studentSessions').push();
+                sessionRef.set({
+                    name: session.name,
+                    class: session.class,
+                    score: session.score,
+                    total: session.total,
+                    time: session.timeTaken,
+                    timestamp: new Date().toISOString()
+                });
+                console.log("Session saved successfully to Firebase!");
+            } catch (error) {
+                console.error("Error saving session to Firebase:", error);
             }
         }
-
-        resetPalette() {
-            const options = document.querySelectorAll('.answer-option');
-            options.forEach(option => option.classList.remove('selected'));
+        
+        async function fetchStats() {
+            try {
+                const snapshot = await database.ref('studentSessions').once('value');
+                const sessions = snapshot.val();
+                if (!sessions) return { totalGames: 0, totalQuestions: 0, totalCorrect: 0, highScore: 0 };
+        
+                let totalGames = 0, totalQuestions = 0, totalCorrect = 0, highScore = 0;
+                
+                Object.values(sessions).forEach(session => {
+                    totalGames++;
+                    totalQuestions += session.total;
+                    totalCorrect += session.score;
+                    if (session.score > highScore) {
+                        highScore = session.score;
+                    }
+                });
+        
+                return {
+                    totalGames,
+                    totalQuestions,
+                    totalCorrect,
+                    highScore
+                };
+            } catch (error) {
+                console.error("Error fetching stats from Firebase:", error);
+                return { totalGames: 0, totalQuestions: 0, totalCorrect: 0, highScore: 0 };
+            }
         }
-    }
 
-    // Global Functions
-    function startGame(event) {
-        event.preventDefault();
-        studentName = document.getElementById('studentName').value;
-        studentClass = document.getElementById('studentClass').value;
-        
-        document.getElementById('loginPage').style.display = 'none';
-        document.getElementById('gamePage').style.display = 'block';
-        document.getElementById('statsToggle').style.display = 'block';
-        
-        game = new Game();
-        document.getElementById('playerInfo').innerText = `Tên: ${studentName} - Lớp: ${studentClass}`;
-        
-        statsManager = new StatisticsManager();
-        statsManager.trackUser(studentName, studentClass);
-        statsManager.trackGameStart();
-        
-        window.onresize = () => game.draw();
-    }
-    
-    function finishExam() {
-        if (!game) return;
-        game.stopTimer();
-        
-        const totalTime = game.getElapsedTime();
-        const sessionData = {
-            name: studentName,
-            studentClass: studentClass,
-            date: new Date().toLocaleDateString('vi-VN'),
-            totalQuestions: game.total,
-            correctAnswers: game.correct,
-            wrongAnswers: game.total - game.correct,
-            accuracy: game.total > 0 ? (game.correct / game.total * 100).toFixed(1) : 0,
-            score10: game.total > 0 ? (game.correct / game.total * 10).toFixed(1) : 0,
-            score100: game.total > 0 ? (game.correct / game.total * 100).toFixed(1) : 0,
-            timeSpent: formatTime(totalTime)
-        };
-        
-        statsManager.addSession(sessionData);
-
-        document.getElementById('finalTotal').innerText = game.total;
-        document.getElementById('finalCorrect').innerText = game.correct;
-        document.getElementById('finalAccuracy').innerText = game.total > 0 ? (game.correct / game.total * 100).toFixed(1) + '%' : '0%';
-        document.getElementById('finalTime').innerText = formatTime(totalTime);
-        document.getElementById('finalResultsStudent').innerText = `Học sinh: ${studentName}`;
-        
-        const accuracy = game.total > 0 ? game.correct / game.total : 0;
-        const finalMessageEl = document.getElementById('finalMessage');
-        if (accuracy >= 0.8) {
-            finalMessageEl.innerText = '🎉 Chúc mừng! Bạn đã hoàn thành xuất sắc!';
-            finalMessageEl.className = 'final-message excellent';
-        } else if (accuracy >= 0.5) {
-            finalMessageEl.innerText = '💪 Khá tốt! Cần cố gắng hơn nữa.';
-            finalMessageEl.className = 'final-message good';
-        } else {
-            finalMessageEl.innerText = '📝 Cần ôn tập thêm! Đừng nản chí!';
-            finalMessageEl.className = 'final-message needs-improvement';
+        async function fetchStudentSessions() {
+            try {
+                const snapshot = await database.ref('studentSessions').orderByChild('timestamp').once('value');
+                const sessions = snapshot.val();
+                if (!sessions) return [];
+                
+                return Object.values(sessions).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            } catch (error) {
+                console.error("Error fetching student sessions from Firebase:", error);
+                return [];
+            }
         }
-        
-        showPopup('finalResultsPopup');
-    }
-    
-    function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-    }
-    
-    function resetGame() {
-        if (confirm('Bạn có chắc muốn đặt lại toàn bộ?')) {
-            // Reset is disabled for JSONbin.io since it affects all users
-            alert("Tính năng này đã bị vô hiệu hóa để tránh xóa dữ liệu của tất cả học sinh.");
-        }
-    }
-    
-    function restartGame() {
-        closePopup('finalResultsPopup');
-        game.correct = 0;
-        game.total = 0;
-        game.score = 0;
-        game.updateScore();
-        game.newQuestion();
-        game.startTimer();
-    }
 
-    function selectAnswer(answer) {
-        if (game.isAnswered) return;
-        game.resetPalette();
-        const selectedEl = document.querySelector(`.answer-option[onclick="selectAnswer('${answer}')"]`);
-        selectedEl.classList.add('selected');
-        game.selectedAnswer = answer;
-    }
+        async function exportCSV(sessions) {
+            if (sessions.length === 0) {
+                alert("Không có dữ liệu để xuất.");
+                return;
+            }
+            const headers = ["Tên học sinh", "Lớp", "Điểm", "Tổng số câu", "Thời gian", "Ngày làm"];
+            const csvRows = [headers.join(',')];
 
-    function checkAnswer() {
-        game.checkAnswer();
-    }
-    
-    function newQuestion() {
-        game.newQuestion();
-    }
-    
-    function showMessage(type, text) {
-        const messageEl = document.getElementById('message');
-        messageEl.style.display = 'block';
-        messageEl.className = `message ${type}`;
-        messageEl.innerText = text;
-    }
-    
-    function showPopup(id) {
-        document.getElementById(id).classList.add('show');
-    }
-    
-    function closePopup(id) {
-        document.getElementById(id).classList.remove('show');
-    }
-    
-    function toggleStats() {
-        const statsPanel = document.getElementById('statsPanel');
-        const statsToggle = document.getElementById('statsToggle');
-        statsPanel.classList.toggle('hidden');
-        if (statsPanel.classList.contains('hidden')) {
-            statsToggle.innerText = '📊';
-        } else {
-            statsToggle.innerText = '❌';
-        }
-    }
-    
-    async function showStudentStats() {
-        const statsTableBody = document.getElementById('statsTableBody');
-        statsTableBody.innerHTML = '<tr><td colspan="11">Đang tải dữ liệu...</td></tr>';
-        
-        // Fetch the latest data from JSONbin.io
-        await statsManager.initializeStats();
-        
-        const sessions = statsManager.getStudentSessions();
-        statsTableBody.innerHTML = '';
-        
-        if (sessions.length > 0) {
-            let stt = 1;
             sessions.forEach(session => {
-                const row = document.createElement('tr');
-                const accuracyClass = session.accuracy >= 80 ? 'score-excellent' : (session.accuracy >= 50 ? 'score-good' : 'score-needs-improvement');
-                row.innerHTML = `
-                    <td>${stt++}</td>
-                    <td>${session.name}</td>
-                    <td>${session.studentClass}</td>
-                    <td>${session.date}</td>
-                    <td>1</td>
-                    <td>${session.totalQuestions}</td>
-                    <td>${session.correctAnswers}</td>
-                    <td>${session.wrongAnswers}</td>
-                    <td class="${accuracyClass}">${session.accuracy}%</td>
-                    <td>${session.score10}</td>
-                    <td>${session.score100}</td>
-                `;
-                statsTableBody.appendChild(row);
+                const date = new Date(session.timestamp).toLocaleString('vi-VN');
+                const row = [
+                    `"${session.name}"`,
+                    `"${session.class}"`,
+                    session.score,
+                    session.total,
+                    session.time,
+                    `"${date}"`
+                ].join(',');
+                csvRows.push(row);
             });
-        } else {
-            statsTableBody.innerHTML = '<tr><td colspan="11">Không có dữ liệu thống kê nào được tìm thấy.</td></tr>';
+            
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute('download', 'thong_ke_quy_tac_ban_tay_trai.csv');
+            link.click();
+        }
+
+        function resetAllFirebaseData() {
+            if (confirm('⚠️ Bạn có chắc muốn xóa tất cả thống kê trên Firebase? Hành động này không thể hoàn tác!')) {
+                database.ref('studentSessions').remove()
+                    .then(() => {
+                        alert("Đã xóa toàn bộ dữ liệu thành công!");
+                        location.reload();
+                    })
+                    .catch((error) => {
+                        alert("Lỗi khi xóa dữ liệu:", error.message);
+                    });
+            }
+        }
+
+        async function updateStatsPanel() {
+            const stats = await fetchStats();
+            document.getElementById('totalGames').textContent = stats.totalGames;
+            document.getElementById('totalQuestions').textContent = stats.totalQuestions;
+            document.getElementById('totalCorrect').textContent = stats.totalCorrect;
+            document.getElementById('highScore').textContent = stats.highScore;
+            const accuracy = stats.totalQuestions > 0 ? ((stats.totalCorrect / stats.totalQuestions) * 100).toFixed(1) : 0;
+            document.getElementById('globalAccuracy').textContent = `${accuracy}%`;
+        }
+
+        async function showStudentStats() {
+            const sessions = await fetchStudentSessions();
+            const tableBody = document.querySelector('#statsTable tbody');
+            tableBody.innerHTML = '';
+            
+            if (sessions.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5">Không có bản ghi nào.</td></tr>';
+            } else {
+                sessions.forEach(session => {
+                    const row = document.createElement('tr');
+                    const date = new Date(session.timestamp).toLocaleString('vi-VN');
+                    
+                    let scoreClass = '';
+                    const percentage = (session.score / session.total) * 100 || 0;
+                    if (percentage >= 80) scoreClass = 'score-excellent';
+                    else if (percentage >= 50) scoreClass = 'score-good';
+                    else scoreClass = 'score-needs-improvement';
+                    
+                    row.innerHTML = `
+                        <td>${session.name}</td>
+                        <td>${session.class}</td>
+                        <td class="${scoreClass}">${session.score}/${session.total}</td>
+                        <td>${session.time}</td>
+                        <td>${date}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            const exportButton = document.querySelector('#studentStatsPopup .stats-header button');
+            exportButton.onclick = () => exportCSV(sessions);
+            document.getElementById('studentStatsPopup').classList.add('show');
+        }
+
+        function closeStudentStatsPopup() {
+            document.getElementById('studentStatsPopup').classList.remove('show');
+        }
+
+        function toggleStats() {
+            const statsPanel = document.getElementById('statsPanel');
+            const isHidden = statsPanel.classList.contains('hidden');
+            if (isHidden) {
+                updateStatsPanel();
+                statsPanel.classList.remove('hidden');
+            } else {
+                statsPanel.classList.add('hidden');
+            }
         }
         
-        const now = new Date();
-        const month = now.toLocaleString('vi-VN', { month: 'long', year: 'numeric' });
-        document.getElementById('currentMonth').innerText = month;
-        showPopup('studentStatsPopup');
-    }
-
-    function closeStudentStats() {
-        closePopup('studentStatsPopup');
-    }
-    
-    async function exportCSV() {
-        await statsManager.initializeStats();
-        const sessions = statsManager.getStudentSessions();
-        if (sessions.length === 0) {
-            alert("Không có dữ liệu để xuất.");
-            return;
-        }
-
-        let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += "STT,Họ tên,Lớp,Ngày,Lượt truy cập,Câu làm,Câu đúng,Câu sai,Tỷ lệ (%),Điểm (10),Điểm (100),Thời gian\n";
-
-        sessions.forEach((session, index) => {
-            let row = `${index + 1},"${session.name}",${session.studentClass},${session.date},${session.accessCount || 1},${session.totalQuestions},${session.correctAnswers},${session.wrongAnswers},${session.accuracy},${session.score10},${session.score100},"${session.timeSpent}"`;
-            csvContent += row + "\n";
-        });
-
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `thong_ke_hoc_sinh.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-</script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'971b6ab9d2b98211',t:'MTc1NTYyNTAyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(f){e(f);if('complete'===document.readyState)c()}}}})();</script></body>
+        document.querySelector("#statsPanel button:last-child").onclick = resetAllFirebaseData;
+        
+    </script>
+</body>
 </html>
