@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -933,7 +933,6 @@
     </style>
 </head>
 <body>
-    <!-- Login Page -->
     <div id="loginPage" class="login-container">
         <div class="login-card">
             <h1 class="login-title">🧲⚡ Quy tắc bàn tay trái</h1>
@@ -955,7 +954,6 @@
         </div>
     </div>
 
-    <!-- Game Page -->
     <div id="gamePage" class="game-container">
         <div class="header">
             <h1>🧲⚡ Quy tắc bàn tay trái - Xác định lực từ</h1>
@@ -1041,7 +1039,6 @@
         </div>
     </div>
 
-    <!-- Result Popup -->
     <div id="resultPopup" class="popup">
         <div class="popup-content">
             <div id="popupIcon" class="popup-icon">🎉</div>
@@ -1052,7 +1049,6 @@
         </div>
     </div>
 
-    <!-- Final Results Popup -->
     <div id="finalResultsPopup" class="popup">
         <div class="final-results">
             <div class="final-results-header">🏆</div>
@@ -1078,12 +1074,8 @@
                         <div class="stat-value" id="finalTime">00:00</div>
                     </div>
                 </div>
-                
-                <div class="final-message" id="finalMessage">
-                    🎉 Chúc mừng! Bạn đã hoàn thành xuất sắc!
-                </div>
+                <div class="final-message" id="finalMessage"> 🎉 Chúc mừng! Bạn đã hoàn thành xuất sắc! </div>
             </div>
-            
             <div style="margin-top: 20px;">
                 <button class="close-btn" onclick="closeFinalResults()">Đóng</button>
                 <button class="restart-btn" onclick="restartGame()">🔄 Chơi lại</button>
@@ -1091,18 +1083,14 @@
         </div>
     </div>
 
-    <!-- Student Statistics Popup -->
     <div id="studentStatsPopup" class="student-stats-popup">
         <div class="student-stats-content">
             <div class="stats-table-header">
                 <div class="stats-table-title">📊 Thống kê học sinh tháng <span id="currentMonth"></span></div>
                 <div class="stats-table-subtitle">Dữ liệu chi tiết về kết quả học tập của từng học sinh</div>
             </div>
-            
             <div class="stats-summary" id="statsSummary">
-                <!-- Summary cards will be inserted here -->
-            </div>
-            
+                </div>
             <div class="stats-table-container">
                 <table class="stats-table">
                     <thead>
@@ -1121,11 +1109,9 @@
                         </tr>
                     </thead>
                     <tbody id="statsTableBody">
-                        <!-- Student data will be inserted here -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
-            
             <div style="text-align: center; margin-top: 20px;">
                 <button class="close-stats-btn" onclick="closeStudentStats()">✖️ Đóng</button>
                 <button class="export-csv-btn" onclick="exportCSV()">📊 Xuất CSV</button>
@@ -1133,62 +1119,49 @@
         </div>
     </div>
 
-    <!-- Statistics Panel -->
     <button id="statsToggle" class="stats-toggle" onclick="toggleStats()" title="Xem thống kê">📊</button>
-    
     <div id="statsPanel" class="stats-panel hidden">
         <div class="stats-header">📊 Thống kê hệ thống</div>
-        
         <div class="stats-item">
             <span class="stats-label">🌐 Lượt truy cập:</span>
             <span class="stats-value" id="totalVisits">0</span>
         </div>
-        
         <div class="stats-item">
             <span class="stats-label">👥 Người dùng:</span>
             <span class="stats-value" id="totalUsers">0</span>
         </div>
-        
         <div class="stats-item">
             <span class="stats-label">🎮 Lượt chơi:</span>
             <span class="stats-value" id="totalGames">0</span>
         </div>
-        
         <div class="stats-item">
             <span class="stats-label">❓ Câu hỏi:</span>
             <span class="stats-value" id="totalQuestions">0</span>
         </div>
-        
         <div class="stats-item">
             <span class="stats-label">✅ Đúng:</span>
             <span class="stats-value" id="totalCorrect">0</span>
         </div>
-        
         <div class="stats-item">
             <span class="stats-label">📈 Tỷ lệ đúng:</span>
             <span class="stats-value" id="globalAccuracy">0%</span>
         </div>
-        
         <div class="stats-item">
             <span class="stats-label">⏱️ Thời gian TB:</span>
             <span class="stats-value" id="avgTime">00:00</span>
         </div>
-        
         <div class="stats-item">
             <span class="stats-label">🏆 Điểm cao nhất:</span>
             <span class="stats-value" id="highScore">0</span>
         </div>
-        
         <div class="stats-item">
             <span class="stats-label">📅 Hôm nay:</span>
             <span class="stats-value" id="todayVisits">0</span>
         </div>
-        
         <div class="stats-item">
             <span class="stats-label">🔥 Streak:</span>
             <span class="stats-value" id="currentStreak">0</span>
         </div>
-        
         <div style="margin-top: 15px; padding-top: 10px; border-top: 2px solid #e2e8f0;">
             <button class="stats-btn" onclick="showStudentStats()" title="Xem bảng thống kê học sinh">
                 📋 Bảng thống kê
@@ -1198,1297 +1171,831 @@
             </button>
         </div>
     </div>
+<script>
+    // Sửa đường link API tại đây
+    const API_URL = "https://script.google.com/macros/s/AKfycbyBj7Yw73Iu8jHb8aEJlsmopsLu7JYfFs_tsaGOiLswB5w9z-OWmceNloLPGERig02p/exec";
 
-    <script>
-		const API_URL = "https://script.google.com/macros/s/AKfycbxqE_Rh4HH1NwVzgJQ_CL58ndKxS0Cm5Dw_1oSLTpm72fWdC-qL23R6rIksBO29NGUK/exec";
-        let game;
-        let studentName = '';
-        let studentClass = '';
-        let statsManager;
-        
-        // Statistics Manager Class
-        class StatisticsManager {
-            constructor() {
-                this.initializeStats();
-                this.trackVisit();
+    let game;
+    let studentName = '';
+    let studentClass = '';
+    let statsManager;
+
+    // Statistics Manager Class
+    class StatisticsManager {
+        constructor() {
+            this.initializeStats();
+            this.trackVisit();
+            this.updateDisplay();
+            // Auto-update every 30 seconds
+            setInterval(() => {
                 this.updateDisplay();
-                
-                // Auto-update every 30 seconds
-                setInterval(() => {
-                    this.updateDisplay();
-                }, 30000);
+            }, 30000);
+        }
+
+        initializeStats() {
+            // Initialize default stats if not exists
+            const defaultStats = {
+                totalVisits: 0,
+                totalUsers: 0,
+                totalGames: 0,
+                totalQuestions: 0,
+                totalCorrect: 0,
+                totalTime: 0,
+                highScore: 0,
+                todayVisits: 0,
+                lastVisitDate: null,
+                currentStreak: 0,
+                lastStreakDate: null,
+                userSessions: {},
+                dailyStats: {}
+            };
+            // Load existing stats or use defaults
+            this.stats = this.loadStats() || defaultStats;
+            this.saveStats();
+        }
+
+        async loadStats() {
+            try {
+                const res = await fetch(API_URL);
+                return await res.json();
+            } catch (e) {
+                console.warn("Could not load stats:", e);
+                return null;
             }
-            
-            initializeStats() {
-                // Initialize default stats if not exists
-                const defaultStats = {
-                    totalVisits: 0,
-                    totalUsers: 0,
-                    totalGames: 0,
+        }
+
+        saveStats() {
+            fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    action: "updateGlobal",
+                    totalVisits: this.stats.totalVisits,
+                    totalUsers: this.stats.totalUsers,
+                    totalGames: this.stats.totalGames,
+                    totalQuestions: this.stats.totalQuestions,
+                    totalCorrect: this.stats.totalCorrect,
+                    highScore: this.stats.highScore,
+                    totalTime: this.stats.totalTime,
+                    todayVisits: this.stats.todayVisits,
+                    currentStreak: this.stats.currentStreak,
+                    lastStreakDate: this.stats.lastStreakDate
+                })
+            });
+        }
+
+        trackVisit() {
+            const today = new Date().toDateString();
+            const now = Date.now();
+            // Increment total visits
+            this.stats.totalVisits++;
+
+            // Track daily visits
+            if (!this.stats.dailyStats[today]) {
+                this.stats.dailyStats[today] = {
+                    visits: 0,
+                    games: 0,
+                    questions: 0,
+                    correct: 0
+                };
+            }
+            this.stats.dailyStats[today].visits++;
+            this.stats.todayVisits = this.stats.dailyStats[today].visits;
+
+            // Update streak
+            this.updateStreak(today);
+
+            // Clean old daily stats (keep only last 30 days)
+            this.cleanOldStats();
+            this.saveStats();
+        }
+
+        updateStreak(today) {
+            const lastDate = this.stats.lastStreakDate;
+            if (!lastDate) {
+                // First visit
+                this.stats.currentStreak = 1;
+            } else {
+                const lastVisit = new Date(lastDate);
+                const todayDate = new Date(today);
+                const diffTime = todayDate - lastVisit;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) {
+                    // Consecutive day
+                    this.stats.currentStreak++;
+                } else if (diffDays > 1) {
+                    // Streak broken
+                    this.stats.currentStreak = 1;
+                }
+                // Same day = no change
+            }
+            this.stats.lastStreakDate = today;
+        }
+
+        cleanOldStats() {
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            Object.keys(this.stats.dailyStats).forEach(date => {
+                if (new Date(date) < thirtyDaysAgo) {
+                    delete this.stats.dailyStats[date];
+                }
+            });
+        }
+
+        trackUser(name, className) {
+            const userKey = `${name}_${className}`;
+            if (!this.stats.userSessions[userKey]) {
+                this.stats.totalUsers++;
+                this.stats.userSessions[userKey] = {
+                    name: name,
+                    studentClass: className,
+                    firstVisit: Date.now(),
+                    sessions: 0,
                     totalQuestions: 0,
                     totalCorrect: 0,
-                    totalTime: 0,
-                    highScore: 0,
-                    todayVisits: 0,
-                    lastVisitDate: null,
-                    currentStreak: 0,
-                    lastStreakDate: null,
-                    userSessions: {},
-                    dailyStats: {}
+                    bestScore: 0,
+                    totalTime: 0
                 };
-                
-                // Load existing stats or use defaults
-                this.stats = this.loadStats() || defaultStats;
-                this.saveStats();
             }
-            
-			async loadStats() {
-				try {
-					const res = await fetch(API_URL);
-					return await res.json();
-				} catch (e) {
-					console.warn("Could not load stats:", e);
-					return null;
-				}
-			}
-			
-			saveStats() {
-				fetch(API_URL, {
-					method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-					body: new URLSearchParams({
-						action: "updateGlobal",
-						totalVisits: this.stats.totalVisits,
-						totalUsers: this.stats.totalUsers,
-						totalGames: this.stats.totalGames,
-						totalQuestions: this.stats.totalQuestions,
-						totalCorrect: this.stats.totalCorrect,
-						highScore: this.stats.highScore,
-						totalTime: this.stats.totalTime,
-						todayVisits: this.stats.todayVisits,
-						currentStreak: this.stats.currentStreak,
-						lastStreakDate: this.stats.lastStreakDate
-					})
-				});
-			}
-            
-            trackVisit() {
-                const today = new Date().toDateString();
-                const now = Date.now();
-                
-                // Increment total visits
-                this.stats.totalVisits++;
-                
-                // Track daily visits
-                if (!this.stats.dailyStats[today]) {
-                    this.stats.dailyStats[today] = { visits: 0, games: 0, questions: 0, correct: 0 };
-                }
-                this.stats.dailyStats[today].visits++;
-                this.stats.todayVisits = this.stats.dailyStats[today].visits;
-                
-                // Update streak
-                this.updateStreak(today);
-                
-                // Clean old daily stats (keep only last 30 days)
-                this.cleanOldStats();
-                
-                this.saveStats();
+            this.stats.userSessions[userKey].sessions++;
+            this.saveStats();
+        }
+
+        trackGameStart() {
+            const today = new Date().toDateString();
+            this.stats.totalGames++;
+            if (this.stats.dailyStats[today]) {
+                this.stats.dailyStats[today].games++;
             }
-            
-            updateStreak(today) {
-                const lastDate = this.stats.lastStreakDate;
-                
-                if (!lastDate) {
-                    // First visit
-                    this.stats.currentStreak = 1;
-                } else {
-                    const lastVisit = new Date(lastDate);
-                    const todayDate = new Date(today);
-                    const diffTime = todayDate - lastVisit;
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    
-                    if (diffDays === 1) {
-                        // Consecutive day
-                        this.stats.currentStreak++;
-                    } else if (diffDays > 1) {
-                        // Streak broken
-                        this.stats.currentStreak = 1;
-                    }
-                    // Same day = no change
-                }
-                
-                this.stats.lastStreakDate = today;
+            this.saveStats();
+            this.updateDisplay();
+        }
+
+        trackQuestion(isCorrect) {
+            const today = new Date().toDateString();
+            this.stats.totalQuestions++;
+            if (isCorrect) {
+                this.stats.totalCorrect++;
             }
-            
-            cleanOldStats() {
-                const thirtyDaysAgo = new Date();
-                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-                
-                Object.keys(this.stats.dailyStats).forEach(date => {
-                    if (new Date(date) < thirtyDaysAgo) {
-                        delete this.stats.dailyStats[date];
-                    }
-                });
-            }
-            
-            trackUser(name, className) {
-                const userKey = `${name}_${className}`;
-                
-                if (!this.stats.userSessions[userKey]) {
-                    this.stats.totalUsers++;
-                    this.stats.userSessions[userKey] = {
-                        name: name,
-                        studentClass: className,
-                        firstVisit: Date.now(),
-                        sessions: 0,
-                        totalQuestions: 0,
-                        totalCorrect: 0,
-                        bestScore: 0,
-                        totalTime: 0
-                    };
-                }
-                
-                this.stats.userSessions[userKey].sessions++;
-                this.saveStats();
-            }
-            
-            trackGameStart() {
-                const today = new Date().toDateString();
-                
-                this.stats.totalGames++;
-                
-                if (this.stats.dailyStats[today]) {
-                    this.stats.dailyStats[today].games++;
-                }
-                
-                this.saveStats();
-                this.updateDisplay();
-            }
-            
-            trackQuestion(isCorrect) {
-                const today = new Date().toDateString();
-                
-                this.stats.totalQuestions++;
-                
+            if (this.stats.dailyStats[today]) {
+                this.stats.dailyStats[today].questions++;
                 if (isCorrect) {
-                    this.stats.totalCorrect++;
-                }
-                
-                if (this.stats.dailyStats[today]) {
-                    this.stats.dailyStats[today].questions++;
-                    if (isCorrect) {
-                        this.stats.dailyStats[today].correct++;
-                    }
-                }
-                
-                // Update user stats
-                const userKey = `${studentName}_${studentClass}`;
-                if (this.stats.userSessions[userKey]) {
-                    this.stats.userSessions[userKey].totalQuestions++;
-                    if (isCorrect) {
-                        this.stats.userSessions[userKey].totalCorrect++;
-                    }
-                }
-                
-                this.saveStats();
-                this.updateDisplay();
-            }
-            
-            trackGameEnd(score, totalQuestions, timeSpent) {
-                // Update high score
-                if (score > this.stats.highScore) {
-                    this.stats.highScore = score;
-                }
-                
-                // Update total time
-                this.stats.totalTime += timeSpent;
-                
-                // Update user stats
-                const userKey = `${studentName}_${studentClass}`;
-                if (this.stats.userSessions[userKey]) {
-                    const user = this.stats.userSessions[userKey];
-                    if (score > user.bestScore) {
-                        user.bestScore = score;
-                    }
-                    user.totalTime += timeSpent;
-                }
-                
-                // Save detailed student session data
-                this.saveStudentSession(score, totalQuestions, timeSpent);
-                
-                this.saveStats();
-                this.updateDisplay();
-            }
-            
-			saveStudentSession(score, totalQuestions, timeSpent) {
-				const today = new Date();
-				const dateStr = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
-				
-				const correctAnswers = score;
-				const wrongAnswers = totalQuestions - score;
-				const accuracy = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
-				const score10 = Math.round((accuracy / 100) * 10 * 100) / 100;
-				const score100 = accuracy;
-
-				fetch(API_URL, {
-					method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-					body: new URLSearchParams({
-						action: "addSession",
-						name: studentName,
-						studentClass: studentClass,
-						date: dateStr,
-						accessCount: 1,
-						totalQuestions: totalQuestions,
-						correctAnswers: correctAnswers,
-						wrongAnswers: wrongAnswers,
-						accuracy: accuracy,
-						score10: score10,
-						score100: score100,
-						timeSpent: timeSpent
-					})
-				});
-			}
-            
-            loadStudentSessions() {
-                try {
-                    const saved = localStorage.getItem('studentGameSessions');
-                    return saved ? JSON.parse(saved) : [];
-                } catch (e) {
-                    console.warn('Could not load student sessions:', e);
-                    return [];
+                    this.stats.dailyStats[today].correct++;
                 }
             }
-            
-            saveStudentSessions(sessions) {
-                try {
-                    localStorage.setItem('studentGameSessions', JSON.stringify(sessions));
-                } catch (e) {
-                    console.warn('Could not save student sessions:', e);
-                }
-            }
-            
-            getStudentSessionsForMonth(month, year) {
-                const sessions = this.loadStudentSessions();
-                
-                return sessions.filter(session => {
-                    const [day, sessionMonth, sessionYear] = session.date.split('/').map(Number);
-                    return sessionMonth === month && sessionYear === year;
-                });
-            }
-            
-            getCurrentMonthSessions() {
-                const now = new Date();
-                return this.getStudentSessionsForMonth(now.getMonth() + 1, now.getFullYear());
-            }
-            
-            getMonthSummary(sessions) {
-                if (sessions.length === 0) {
-                    return {
-                        totalStudents: 0,
-                        totalSessions: 0,
-                        totalQuestions: 0,
-                        totalCorrect: 0,
-                        averageAccuracy: 0,
-                        averageScore10: 0,
-                        averageScore100: 0
-                    };
-                }
-                
-                const uniqueStudents = new Set(sessions.map(s => `${s.name}_${s.class}`)).size;
-                const totalSessions = sessions.length;
-                const totalQuestions = sessions.reduce((sum, s) => sum + s.totalQuestions, 0);
-                const totalCorrect = sessions.reduce((sum, s) => sum + s.correctAnswers, 0);
-                const averageAccuracy = Math.round(sessions.reduce((sum, s) => sum + s.accuracy, 0) / sessions.length);
-                const averageScore10 = Math.round((sessions.reduce((sum, s) => sum + s.score10, 0) / sessions.length) * 100) / 100;
-                const averageScore100 = Math.round(sessions.reduce((sum, s) => sum + s.score100, 0) / sessions.length);
-                
-                return {
-                    totalStudents: uniqueStudents,
-                    totalSessions: totalSessions,
-                    totalQuestions: totalQuestions,
-                    totalCorrect: totalCorrect,
-                    averageAccuracy: averageAccuracy,
-                    averageScore10: averageScore10,
-                    averageScore100: averageScore100
-                };
-            }
-            
-            getGlobalAccuracy() {
-                return this.stats.totalQuestions > 0 ? 
-                    Math.round((this.stats.totalCorrect / this.stats.totalQuestions) * 100) : 0;
-            }
-            
-			getAverageTime(stats) {
-				if (!stats || stats.totalGames == 0) return "00:00";
-				const avgSeconds = Math.floor(stats.totalTime / stats.totalGames / 1000);
-				const minutes = Math.floor(avgSeconds / 60);
-				const seconds = avgSeconds % 60;
-				return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-			}
-            
-			async updateDisplay() {
-				try {
-					const res = await fetch(API_URL);
-					const stats = await res.json();
-					document.getElementById('totalVisits').textContent = stats.totalVisits || 0;
-					document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
-					document.getElementById('totalGames').textContent = stats.totalGames || 0;
-					document.getElementById('totalQuestions').textContent = stats.totalQuestions || 0;
-					document.getElementById('totalCorrect').textContent = stats.totalCorrect || 0;
-					document.getElementById('globalAccuracy').textContent = 
-						stats.totalQuestions > 0 ? Math.round((stats.totalCorrect / stats.totalQuestions) * 100) + "%" : "0%";
-					document.getElementById('avgTime').textContent = this.getAverageTime(stats);
-					document.getElementById('highScore').textContent = stats.highScore || 0;
-					document.getElementById('todayVisits').textContent = stats.todayVisits || 0;
-					document.getElementById('currentStreak').textContent = stats.currentStreak || 0;
-				} catch (e) {
-					console.error("Không thể tải thống kê:", e);
-				}
-			}
-
-            exportStats() {
-                return {
-                    summary: {
-                        totalVisits: this.stats.totalVisits,
-                        totalUsers: this.stats.totalUsers,
-                        totalGames: this.stats.totalGames,
-                        totalQuestions: this.stats.totalQuestions,
-                        globalAccuracy: this.getGlobalAccuracy(),
-                        averageTime: this.getAverageTime(),
-                        highScore: this.stats.highScore,
-                        currentStreak: this.stats.currentStreak
-                    },
-                    dailyStats: this.stats.dailyStats,
-                    topUsers: this.getTopUsers()
-                };
-            }
-            
-            getTopUsers() {
-                return Object.values(this.stats.userSessions)
-                    .sort((a, b) => b.bestScore - a.bestScore)
-                    .slice(0, 10)
-                    .map(user => ({
-                        name: user.name,
-                        studentClass: user.class,
-                        bestScore: user.bestScore,
-                        accuracy: user.totalQuestions > 0 ? 
-                            Math.round((user.totalCorrect / user.totalQuestions) * 100) : 0
-                    }));
-            }
-        }
-        
-        // Initialize statistics when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            statsManager = new StatisticsManager();
-        });
-        
-        function startGame(event) {
-            event.preventDefault();
-            
-            studentName = document.getElementById('studentName').value.trim();
-            studentClass = document.getElementById('studentClass').value.trim();
-            
-            if (!studentName || !studentClass) {
-                alert('Vui lòng nhập đầy đủ thông tin!');
-                return;
-            }
-            
-            // Track user and game start
-            if (statsManager) {
-                statsManager.trackUser(studentName, studentClass);
-                statsManager.trackGameStart();
-            }
-            
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('gamePage').style.display = 'block';
-            document.getElementById('playerInfo').textContent = `${studentName} - ${studentClass}`;
-            
-            game = new PhysicsGame();
-            
-            if (window.MathJax) {
-                MathJax.typesetPromise();
-            }
-        }
-
-        class PhysicsGame {
-            constructor() {
-                this.canvas = document.getElementById('canvas');
-                this.ctx = this.canvas.getContext('2d');
-                this.mathOverlay = document.getElementById('mathOverlay');
-                this.resizeCanvas();
-                
-                this.score = 0;
-                this.total = 0;
-                this.questionNumber = 0;
-                this.questionType = null;
-                this.knownValues = {};
-                this.correctAnswer = null;
-                this.userAnswer = null;
-                this.gameActive = false;
-                this.examFinished = false;
-                
-                this.startTime = null;
-                this.timerInterval = null;
-                this.elapsedTime = 0;
-                this.timerStarted = false;
-                
-                window.addEventListener('resize', () => this.resizeCanvas());
-                this.drawWelcome();
-                this.updateTimerDisplay();
-            }
-            
-            resizeCanvas() {
-                const container = this.canvas.parentElement;
-                this.canvas.width = container.clientWidth;
-                this.canvas.height = container.clientHeight;
-                this.centerX = this.canvas.width / 2;
-                this.centerY = this.canvas.height / 2;
-            }
-            
-            clearMathOverlay() {
-                this.mathOverlay.innerHTML = '';
-            }
-            
-            addMathLabel(x, y, mathText, className = '') {
-                const label = document.createElement('div');
-                label.className = `math-label ${className}`;
-                label.style.left = `${x}px`;
-                label.style.top = `${y}px`;
-                label.innerHTML = mathText;
-                this.mathOverlay.appendChild(label);
-                
-                if (window.MathJax) {
-                    MathJax.typesetPromise([label]);
-                }
-                
-                return label;
-            }
-            
-            drawWelcome() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.clearMathOverlay();
-                
-                const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
-                gradient.addColorStop(0, '#f7fafc');
-                gradient.addColorStop(1, '#edf2f7');
-                this.ctx.fillStyle = gradient;
-                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                
-                this.ctx.fillStyle = '#2d3748';
-                this.ctx.font = 'bold 28px Arial';
-                this.ctx.textAlign = 'center';
-                this.ctx.fillText('🧲⚡ Quy tắc bàn tay trái - Xác định lực từ', this.centerX, this.centerY - 30);
-                
-                this.ctx.font = '18px Arial';
-                this.ctx.fillStyle = '#4a5568';
-                this.ctx.fillText('Nhấn "Câu hỏi mới" để bắt đầu', this.centerX, this.centerY + 15);
-            }
-            
-            newQuestion() {
-                if (this.examFinished) return;
-                
-                const directions = ['up', 'down', 'left', 'right', 'out', 'in'];
-                
-                this.questionType = 'findF';
-                this.questionNumber++;
-                
-                const value1 = directions[Math.floor(Math.random() * directions.length)];
-                const value2 = directions[Math.floor(Math.random() * directions.length)];
-                
-                this.knownValues = { B: value1, I: value2 };
-                this.correctAnswer = this.calculateF(value2, value1);
-                
-                this.userAnswer = null;
-                this.gameActive = true;
-                
-                if (!this.timerStarted) {
-                    this.startTimer();
-                    this.timerStarted = true;
-                }
-                
-                document.getElementById('checkBtn').disabled = true;
-                document.getElementById('message').innerHTML = '';
-                document.getElementById('questionSection').style.display = 'block';
-                
-                document.querySelectorAll('.answer-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                
-                this.updateQuestionDisplay();
-                this.updateAnswerPalette();
-                this.drawQuestion();
-            }
-            
-            updateQuestionDisplay() {
-                document.getElementById('questionTitle').textContent = `Câu ${this.questionNumber}: Tìm hướng lực từ $\\vec{F}$`;
-                
-                document.getElementById('known1').innerHTML = `$\\vec{B}$: ${this.getDirectionName(this.knownValues.B)}`;
-                document.getElementById('known2').innerHTML = `I: ${this.getDirectionName(this.knownValues.I)}`;
-                document.getElementById('unknown').innerHTML = `Tìm: $\\vec{F}$ = ?`;
-                
-                if (window.MathJax) {
-                    MathJax.typesetPromise([document.getElementById('questionSection')]);
-                }
-            }
-            
-            updateAnswerPalette() {
-                document.getElementById('answerTitle').innerHTML = '🎯 Chọn hướng $\\vec{F}$';
-                document.getElementById('zeroOption').innerHTML = '$\\vec{F} = 0$';
-                
-                if (window.MathJax) {
-                    MathJax.typesetPromise([document.querySelector('.left-panel')]);
-                }
-            }
-            
-            calculateF(I, B) {
-                const parallel = {
-                    'up-down': true, 'down-up': true, 'left-right': true, 'right-left': true,
-                    'out-in': true, 'in-out': true, 'up-up': true, 'down-down': true,
-                    'left-left': true, 'right-right': true, 'out-out': true, 'in-in': true
-                };
-                
-                if (parallel[`${I}-${B}`]) return 'zero';
-                
-                const rules = {
-                    'right-up': 'out', 'right-down': 'in', 'right-out': 'down', 'right-in': 'up',
-                    'left-up': 'in', 'left-down': 'out', 'left-out': 'up', 'left-in': 'down',
-                    'up-left': 'out', 'up-right': 'in', 'up-out': 'right', 'up-in': 'left',
-                    'down-left': 'in', 'down-right': 'out', 'down-out': 'left', 'down-in': 'right',
-                    'out-up': 'left', 'out-down': 'right', 'out-left': 'down', 'out-right': 'up',
-                    'in-up': 'right', 'in-down': 'left', 'in-left': 'up', 'in-right': 'down'
-                };
-                
-                return rules[`${I}-${B}`] || 'zero';
-            }
-            
-            drawQuestion() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.clearMathOverlay();
-                
-                this.drawBackground();
-                this.drawKnownVectors();
-                
-                if (this.userAnswer) {
-                    this.drawUserAnswer();
-                }
-            }
-            
-            drawBackground() {
-                const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
-                gradient.addColorStop(0, '#f7fafc');
-                gradient.addColorStop(1, '#edf2f7');
-                this.ctx.fillStyle = gradient;
-                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            }
-            
-            drawKnownVectors() {
-                this.drawMagneticField(this.knownValues.B);
-                this.drawCurrent(this.knownValues.I);
-            }
-            
-            drawMagneticField(direction) {
-                const bgColors = {
-                    'out': '#fee2e2', 'in': '#dbeafe', 'up': '#f0fff4',
-                    'down': '#f0fff4', 'left': '#fef5e7', 'right': '#fef5e7'
-                };
-                
-                this.ctx.fillStyle = bgColors[direction] || '#f8fafc';
-                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                
-                const spacing = 60;
-                const symbolSize = 16;
-                
-                for (let x = spacing; x < this.canvas.width; x += spacing) {
-                    for (let y = spacing; y < this.canvas.height; y += spacing) {
-                        if (Math.abs(x - this.centerX) > 80 || Math.abs(y - this.centerY) > 80) {
-                            this.drawMagneticFieldSymbol(x, y, direction, symbolSize);
-                        }
-                    }
-                }
-                
-                // Draw B vector at left center position
-                const bX = 100;
-                const bY = this.centerY;
-                this.drawVector(direction, 'B', '#2563eb', bX, bY);
-            }
-            
-            drawMagneticFieldSymbol(x, y, direction, size) {
-                this.ctx.save();
-                this.ctx.font = `${size}px Arial`;
-                this.ctx.textAlign = 'center';
-                this.ctx.globalAlpha = 0.2;
-                
-                const colors = {
-                    'out': '#dc2626', 'in': '#2563eb', 'up': '#059669',
-                    'down': '#059669', 'left': '#d97706', 'right': '#d97706'
-                };
-                
-                const symbols = {
-                    'out': '●', 'in': '×', 'up': '↑',
-                    'down': '↓', 'left': '←', 'right': '→'
-                };
-                
-                this.ctx.fillStyle = colors[direction];
-                this.ctx.fillText(symbols[direction], x, y + size/3);
-                this.ctx.restore();
-            }
-            
-            drawCurrent(direction) {
-                const wireLength = 200;
-                
-                if (['left', 'right'].includes(direction)) {
-                    this.ctx.strokeStyle = '#1f2937';
-                    this.ctx.lineWidth = 14;
-                    this.ctx.lineCap = 'round';
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(this.centerX - wireLength/2, this.centerY);
-                    this.ctx.lineTo(this.centerX + wireLength/2, this.centerY);
-                    this.ctx.stroke();
-                    
-                    this.ctx.strokeStyle = '#10b981';
-                    this.ctx.fillStyle = '#10b981';
-                    this.ctx.lineWidth = 5;
-                    
-                    if (direction === 'right') {
-                        this.drawArrow(this.centerX - 40, this.centerY, this.centerX + 40, this.centerY, true);
-                    } else {
-                        this.drawArrow(this.centerX + 40, this.centerY, this.centerX - 40, this.centerY, true);
-                    }
-                    
-                    this.addMathLabel(this.centerX - 10, this.centerY - 50, 'I', 'current');
-                    
-                } else if (['up', 'down'].includes(direction)) {
-                    this.ctx.strokeStyle = '#1f2937';
-                    this.ctx.lineWidth = 14;
-                    this.ctx.lineCap = 'round';
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(this.centerX, this.centerY - wireLength/2);
-                    this.ctx.lineTo(this.centerX, this.centerY + wireLength/2);
-                    this.ctx.stroke();
-                    
-                    this.ctx.strokeStyle = '#10b981';
-                    this.ctx.fillStyle = '#10b981';
-                    this.ctx.lineWidth = 5;
-                    
-                    if (direction === 'down') {
-                        this.drawArrow(this.centerX, this.centerY - 40, this.centerX, this.centerY + 40, true);
-                    } else {
-                        this.drawArrow(this.centerX, this.centerY + 40, this.centerX, this.centerY - 40, true);
-                    }
-                    
-                    this.addMathLabel(this.centerX - 50, this.centerY - 10, 'I', 'current');
-                    
-                } else {
-                    this.ctx.fillStyle = '#1f2937';
-                    this.ctx.beginPath();
-                    this.ctx.arc(this.centerX, this.centerY, 25, 0, 2 * Math.PI);
-                    this.ctx.fill();
-                    
-                    this.ctx.fillStyle = 'white';
-                    this.ctx.font = 'bold 30px Arial';
-                    this.ctx.textAlign = 'center';
-                    this.ctx.fillText(direction === 'out' ? '●' : '×', this.centerX, this.centerY + 10);
-                    
-                    this.addMathLabel(this.centerX - 10, this.centerY - 50, 'I', 'current');
-                }
-            }
-            
-            drawVector(direction, label, color, x, y, isCorrectAnswer = false) {
-                this.ctx.strokeStyle = color;
-                this.ctx.fillStyle = color;
-                this.ctx.lineWidth = 5;
-                
-                const length = 70;
-                let labelX, labelY;
-                let className = label === 'F' ? (isCorrectAnswer ? 'force-correct' : 'force-user') : 
-                               label === 'B' ? '' : 'current';
-                
-                if (isCorrectAnswer) {
-                    className = 'force-correct';
-                }
-                
-                switch(direction) {
-                    case 'up':
-                        this.drawArrow(x, y, x, y - length, true);
-                        labelX = x + 20;
-                        labelY = y - length - 10;
-                        break;
-                    case 'down':
-                        this.drawArrow(x, y, x, y + length, true);
-                        labelX = x + 20;
-                        labelY = y + length + 35;
-                        break;
-                    case 'left':
-                        this.drawArrow(x, y, x - length, y, true);
-                        labelX = x - length - 50;
-                        labelY = y - 10;
-                        break;
-                    case 'right':
-                        this.drawArrow(x, y, x + length, y, true);
-                        labelX = x + length + 20;
-                        labelY = y - 10;
-                        break;
-                    case 'out':
-                        this.ctx.beginPath();
-                        this.ctx.arc(x, y, 18, 0, 2 * Math.PI);
-                        this.ctx.fill();
-                        this.ctx.fillStyle = 'white';
-                        this.ctx.font = 'bold 24px Arial';
-                        this.ctx.textAlign = 'center';
-                        this.ctx.fillText('●', x, y + 8);
-                        labelX = x + 30;
-                        labelY = y - 30;
-                        break;
-                    case 'in':
-                        this.ctx.beginPath();
-                        this.ctx.arc(x, y, 18, 0, 2 * Math.PI);
-                        this.ctx.fill();
-                        this.ctx.fillStyle = 'white';
-                        this.ctx.font = 'bold 24px Arial';
-                        this.ctx.textAlign = 'center';
-                        this.ctx.fillText('×', x, y + 8);
-                        labelX = x + 30;
-                        labelY = y - 30;
-                        break;
-                    case 'zero':
-                        this.ctx.font = 'bold 28px Arial';
-                        this.ctx.textAlign = 'center';
-                        this.ctx.fillText('0', x, y + 10);
-                        labelX = x + 30;
-                        labelY = y - 30;
-                        break;
-                }
-                
-                const mathText = `$\\vec{${label}}$`;
-                this.addMathLabel(labelX, labelY, mathText, className);
-            }
-            
-            drawArrow(fromX, fromY, toX, toY, withHead = true) {
-                this.ctx.beginPath();
-                this.ctx.moveTo(fromX, fromY);
-                this.ctx.lineTo(toX, toY);
-                this.ctx.stroke();
-                
-                if (withHead) {
-                    const headLength = 18;
-                    const angle = Math.atan2(toY - fromY, toX - fromX);
-                    
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(toX, toY);
-                    this.ctx.lineTo(
-                        toX - headLength * Math.cos(angle - Math.PI/6),
-                        toY - headLength * Math.sin(angle - Math.PI/6)
-                    );
-                    this.ctx.moveTo(toX, toY);
-                    this.ctx.lineTo(
-                        toX - headLength * Math.cos(angle + Math.PI/6),
-                        toY - headLength * Math.sin(angle + Math.PI/6)
-                    );
-                    this.ctx.stroke();
-                }
-            }
-            
-            drawUserAnswer() {
-                if (!this.userAnswer) return;
-                
-                // Draw user's F answer at wire center position (purple color)
-                this.drawVector(this.userAnswer, 'F', '#8b5cf6', this.centerX, this.centerY, false);
-            }
-            
-            getDirectionName(dir) {
-                const names = {
-                    'up': 'Hướng lên (↑)', 'down': 'Hướng xuống (↓)',
-                    'left': 'Hướng trái (←)', 'right': 'Hướng phải (→)',
-                    'out': 'Ra ngoài (●)', 'in': 'Vào trong (×)',
-                    'zero': 'Bằng 0'
-                };
-                return names[dir];
-            }
-            
-            selectAnswer(direction) {
-                if (!this.gameActive || this.examFinished) return;
-                
-                this.userAnswer = direction;
-                document.getElementById('checkBtn').disabled = false;
-                
-                this.drawQuestion();
-                
-                setTimeout(() => {
-                    this.drawUserAnswer();
-                }, 100);
-                
-                this.showMessage('Đã chọn đáp án! Nhấn "Kiểm tra đáp án"!', 'info');
-            }
-            
-            checkAnswer() {
-                if (!this.gameActive || !this.userAnswer || this.examFinished) return;
-                
-                this.total++;
-                const isCorrect = this.userAnswer === this.correctAnswer;
-                
-                // Track question in statistics
-                if (statsManager) {
-                    statsManager.trackQuestion(isCorrect);
-                }
-                
+            // Update user stats
+            const userKey = `${studentName}_${studentClass}`;
+            if (this.stats.userSessions[userKey]) {
+                this.stats.userSessions[userKey].totalQuestions++;
                 if (isCorrect) {
-                    this.score++;
-                    this.showPopup({
-                        icon: '🎉',
-                        title: 'Chính xác!',
-                        desc: 'Bạn đã áp dụng đúng quy tắc bàn tay trái!',
-                        score: '+1 điểm',
-                        type: 'correct'
-                    });
-                } else {
-                    const correctName = this.correctAnswer === 'zero' ? 'Bằng 0' : this.getDirectionName(this.correctAnswer);
-                    this.showPopup({
-                        icon: '❌',
-                        title: 'Sai rồi!',
-                        desc: `Đáp án đúng: ${correctName}`,
-                        score: '+0 điểm',
-                        type: 'incorrect'
-                    });
-                    
-                    setTimeout(() => {
-                        this.showCorrectAnswer();
-                    }, 500);
-                }
-                
-                this.gameActive = false;
-                this.updateScore();
-            }
-            
-            showCorrectAnswer() {
-                // Show correct F answer at wire center position (red color)
-                this.drawVector(this.correctAnswer, 'F', '#dc2626', this.centerX, this.centerY, true);
-            }
-            
-            showMessage(text, type) {
-                document.getElementById('message').innerHTML = `<div class="message ${type}">${text}</div>`;
-            }
-            
-            showPopup(data) {
-                document.getElementById('popupIcon').textContent = data.icon;
-                document.getElementById('popupTitle').textContent = data.title;
-                document.getElementById('popupTitle').className = `popup-title ${data.type === 'correct' ? 'result-correct' : 'result-incorrect'}`;
-                document.getElementById('popupDesc').innerHTML = data.desc;
-                document.getElementById('popupScore').textContent = data.score;
-                document.getElementById('resultPopup').classList.add('show');
-            }
-            
-            updateScore() {
-                document.getElementById('score').textContent = this.score;
-                document.getElementById('total').textContent = this.total;
-                const accuracy = this.total > 0 ? Math.round((this.score / this.total) * 100) : 0;
-                document.getElementById('accuracy').textContent = accuracy + '%';
-            }
-            
-            startTimer() {
-                this.startTime = Date.now();
-                this.timerInterval = setInterval(() => {
-                    this.elapsedTime = Date.now() - this.startTime;
-                    this.updateTimerDisplay();
-                }, 1000);
-            }
-            
-            stopTimer() {
-                if (this.timerInterval) {
-                    clearInterval(this.timerInterval);
-                    this.timerInterval = null;
+                    this.stats.userSessions[userKey].totalCorrect++;
                 }
             }
-            
-            updateTimerDisplay() {
-                if (!this.timerStarted) {
-                    document.getElementById('timerDisplay').textContent = '00:00';
-                    return;
-                }
-                
-                const totalSeconds = Math.floor(this.elapsedTime / 1000);
-                const minutes = Math.floor(totalSeconds / 60);
-                const seconds = totalSeconds % 60;
-                const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                document.getElementById('timerDisplay').textContent = timeString;
-            }
-            
-            getFormattedTime() {
-                const totalSeconds = Math.floor(this.elapsedTime / 1000);
-                const minutes = Math.floor(totalSeconds / 60);
-                const seconds = totalSeconds % 60;
-                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-            
-            finishExam() {
-                if (this.examFinished) return;
-                
-                // Stop the game immediately
-                this.gameActive = false;
-                this.examFinished = true;
-                this.stopTimer();
-                
-                // Track game end in statistics
-                if (statsManager) {
-                    statsManager.trackGameEnd(this.score, this.total, this.elapsedTime);
-                }
-                
-                // Disable all interactive elements
-                document.getElementById('checkBtn').disabled = true;
-                document.querySelectorAll('.btn-primary, .btn-warning').forEach(btn => {
-                    btn.disabled = true;
-                    btn.style.opacity = '0.5';
-                    btn.style.cursor = 'not-allowed';
-                });
-                
-                document.querySelectorAll('.answer-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                    opt.style.pointerEvents = 'none';
-                    opt.style.opacity = '0.4';
-                    opt.style.cursor = 'not-allowed';
-                });
-                
-                // Show final results
-                this.showFinalResults();
-            }
-            
-            showFinalResults() {
-                const accuracy = this.total > 0 ? Math.round((this.score / this.total) * 100) : 0;
-                
-                document.getElementById('finalResultsStudent').textContent = `Học sinh: ${studentName} - ${studentClass}`;
-                document.getElementById('finalTotal').textContent = this.total;
-                document.getElementById('finalCorrect').textContent = this.score;
-                document.getElementById('finalAccuracy').textContent = accuracy + '%';
-                document.getElementById('finalTime').textContent = this.getFormattedTime();
-                
-                // Set message and style based on performance
-                const messageElement = document.getElementById('finalMessage');
-                let message = '';
-                let messageClass = '';
-                
-                if (accuracy >= 80) {
-                    message = '🎉 Xuất sắc! Em đã làm rất tốt 👏';
-                    messageClass = 'excellent';
-                } else if (accuracy >= 50) {
-                    message = '💪 Khá tốt, em cần cố gắng thêm 💪';
-                    messageClass = 'good';
-                } else {
-                    message = '🌱 Chưa đạt, em hãy luyện tập thêm nhé 🌱';
-                    messageClass = 'needs-improvement';
-                }
-                
-                messageElement.textContent = message;
-                messageElement.className = `final-message ${messageClass}`;
-                
-                document.getElementById('finalResultsPopup').classList.add('show');
-            }
-            
-            reset() {
-                this.score = 0;
-                this.total = 0;
-                this.questionNumber = 0;
-                this.gameActive = false;
-                this.userAnswer = null;
-                this.examFinished = false;
-                
-                this.stopTimer();
-                this.timerStarted = false;
-                this.elapsedTime = 0;
-                
-                document.querySelectorAll('.btn-primary, .btn-warning').forEach(btn => {
-                    btn.disabled = false;
-                    btn.style.opacity = '1';
-                    btn.style.cursor = 'pointer';
-                });
-                
-                document.querySelectorAll('.answer-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                    opt.style.pointerEvents = 'auto';
-                    opt.style.opacity = '1';
-                    opt.style.cursor = 'pointer';
-                });
-                
-                this.updateScore();
-                this.updateTimerDisplay();
-                document.getElementById('message').innerHTML = '';
-                document.getElementById('checkBtn').disabled = true;
-                document.getElementById('questionSection').style.display = 'none';
-                
-                this.clearMathOverlay();
-                this.drawWelcome();
-            }
+            this.saveStats();
+            this.updateDisplay();
         }
-        
-        // Global functions
-        function selectAnswer(direction) {
-            if (!game) return;
-            
-            document.querySelectorAll('.answer-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            
-            event.target.classList.add('selected');
-            
-            game.selectAnswer(direction);
-        }
-        
-        function newQuestion() {
-            if (game) game.newQuestion();
-        }
-        
-        function checkAnswer() {
-            if (game) game.checkAnswer();
-        }
-        
-        function finishExam() {
-            if (game) {
-                game.finishExam();
-            }
-        }
-        
-        function resetGame() {
-            if (game) game.reset();
-        }
-        
-        function closePopup() {
-            document.getElementById('resultPopup').classList.remove('show');
-        }
-        
-        function closeFinalResults() {
-            document.getElementById('finalResultsPopup').classList.remove('show');
-        }
-        
-        function restartGame() {
-            document.getElementById('finalResultsPopup').classList.remove('show');
-            if (game) {
-                game.reset();
-            }
-        }
-        
-        // Statistics Panel Functions
-        function toggleStats() {
-            const panel = document.getElementById('statsPanel');
-            const toggle = document.getElementById('statsToggle');
-            
-            if (panel.classList.contains('hidden')) {
-                panel.classList.remove('hidden');
-                toggle.textContent = '✖️';
-                toggle.title = 'Đóng thống kê';
-                
-                // Update display when opening
-                if (statsManager) {
-                    statsManager.updateDisplay();
-                }
+
+        updateDisplay() {
+            document.getElementById('totalVisits').innerText = this.stats.totalVisits;
+            document.getElementById('totalUsers').innerText = this.stats.totalUsers;
+            document.getElementById('totalGames').innerText = this.stats.totalGames;
+            document.getElementById('totalQuestions').innerText = this.stats.totalQuestions;
+            document.getElementById('totalCorrect').innerText = this.stats.totalCorrect;
+            document.getElementById('todayVisits').innerText = this.stats.todayVisits;
+            document.getElementById('currentStreak').innerText = this.stats.currentStreak;
+            if (this.stats.totalQuestions > 0) {
+                const globalAccuracy = (this.stats.totalCorrect / this.stats.totalQuestions * 100).toFixed(1);
+                document.getElementById('globalAccuracy').innerText = `${globalAccuracy}%`;
             } else {
-                panel.classList.add('hidden');
-                toggle.textContent = '📊';
-                toggle.title = 'Xem thống kê';
+                document.getElementById('globalAccuracy').innerText = '0%';
             }
+            document.getElementById('highScore').innerText = this.stats.highScore;
+            // Update avg time
         }
         
-        // Export statistics function (for debugging or admin use)
-        function exportStatistics() {
-            if (statsManager) {
-                const stats = statsManager.exportStats();
-                console.log('📊 Game Statistics:', stats);
-                
-                // Create downloadable JSON file
-                const dataStr = JSON.stringify(stats, null, 2);
-                const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                const url = URL.createObjectURL(dataBlob);
-                
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `physics-game-stats-${new Date().toISOString().split('T')[0]}.json`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-                
-                return stats;
-            }
-        }
-        
-        // Student Statistics Functions
-        function showStudentStats() {
-            if (!statsManager) return;
-            
-            const currentMonth = new Date().getMonth() + 1;
-            const currentYear = new Date().getFullYear();
-            const sessions = statsManager.getCurrentMonthSessions();
-            const summary = statsManager.getMonthSummary(sessions);
-            
-            // Update month display
-            document.getElementById('currentMonth').textContent = `${currentMonth}/${currentYear}`;
-            
-            // Update summary cards
-            const summaryContainer = document.getElementById('statsSummary');
-            summaryContainer.innerHTML = `
-                <div class="summary-card">
-                    <div class="summary-label">👥 Tổng học sinh</div>
-                    <div class="summary-value">${summary.totalStudents}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">🎮 Tổng phiên làm bài</div>
-                    <div class="summary-value">${summary.totalSessions}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">❓ Tổng câu hỏi</div>
-                    <div class="summary-value">${summary.totalQuestions}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">✅ Tổng câu đúng</div>
-                    <div class="summary-value">${summary.totalCorrect}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">📈 Tỷ lệ đúng TB</div>
-                    <div class="summary-value">${summary.averageAccuracy}%</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">🏆 Điểm TB (10)</div>
-                    <div class="summary-value">${summary.averageScore10}</div>
-                </div>
-            `;
-            
-            // Update table
-            const tableBody = document.getElementById('statsTableBody');
-            tableBody.innerHTML = '';
-            
-            if (sessions.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="11" style="text-align: center; padding: 30px; color: #6b7280;">
-                            📝 Chưa có dữ liệu học sinh nào trong tháng này
-                        </td>
-                    </tr>
-                `;
-            } else {
-                // Sort sessions by date (newest first)
-                sessions.sort((a, b) => b.timestamp - a.timestamp);
-                
-                sessions.forEach((session, index) => {
-                    const row = document.createElement('tr');
-                    
-                    // Determine score class for styling
-                    let scoreClass = 'score-needs-improvement';
-                    if (session.accuracy >= 80) scoreClass = 'score-excellent';
-                    else if (session.accuracy >= 50) scoreClass = 'score-good';
-                    
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td style="text-align: left; font-weight: 600;">${session.name}</td>
-                        <td>${session.class}</td>
-                        <td>${session.date}</td>
-                        <td>${session.accessCount}</td>
-                        <td>${session.totalQuestions}</td>
-                        <td style="color: #059669; font-weight: bold;">${session.correctAnswers}</td>
-                        <td style="color: #dc2626; font-weight: bold;">${session.wrongAnswers}</td>
-                        <td class="${scoreClass}">${session.accuracy}%</td>
-                        <td class="${scoreClass}">${session.score10}</td>
-                        <td class="${scoreClass}">${session.score100}</td>
-                    `;
-                    
-                    tableBody.appendChild(row);
-                });
-            }
-            
-            // Show popup
-            document.getElementById('studentStatsPopup').classList.add('show');
-        }
-        
-        function closeStudentStats() {
-            document.getElementById('studentStatsPopup').classList.remove('show');
-        }
-        
-        function exportCSV() {
-            if (!statsManager) {
-                alert('⚠️ Hệ thống thống kê chưa sẵn sàng!');
-                return;
-            }
-            
-            const currentMonth = new Date().getMonth() + 1;
-            const currentYear = new Date().getFullYear();
-            const sessions = statsManager.getCurrentMonthSessions();
-            
-            if (sessions.length === 0) {
-                alert('📝 Không có dữ liệu để xuất trong tháng này!\nHãy làm một vài câu hỏi trước khi xuất dữ liệu.');
-                return;
-            }
-            
+        // This function will fetch student session data from Google Sheet
+        async getStudentSessions() {
             try {
-                // Create CSV content with UTF-8 BOM
-                let csvContent = '\uFEFF'; // BOM for UTF-8 encoding
-                csvContent += 'STT,Họ tên,Lớp,Ngày,Lượt truy cập,Câu làm,Câu đúng,Câu sai,Tỷ lệ (%),Điểm (10),Điểm (100)\n';
-                
-                // Sort sessions by date (newest first)
-                const sortedSessions = [...sessions].sort((a, b) => b.timestamp - a.timestamp);
-                
-                sortedSessions.forEach((session, index) => {
-                    const row = [
-                        index + 1,
-                        `"${session.name}"`,
-                        `"${session.class}"`,
-                        `"${session.date}"`,
-                        session.accessCount,
-                        session.totalQuestions,
-                        session.correctAnswers,
-                        session.wrongAnswers,
-                        session.accuracy,
-                        session.score10,
-                        session.score100
-                    ].join(',');
-                    csvContent += row + '\n';
-                });
-                
-                // Create blob and download
-                const blob = new Blob([csvContent], { 
-                    type: 'text/csv;charset=utf-8;' 
-                });
-                
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                
-                const fileName = `ThongKe_Thang_${currentMonth.toString().padStart(2, '0')}_${currentYear}.csv`;
-                
-                link.href = url;
-                link.download = fileName;
-                link.style.display = 'none';
-                
-                // Trigger download
-                document.body.appendChild(link);
-                link.click();
-                
-                // Cleanup
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(url);
-                }, 100);
-                
-                // Show success message
-                setTimeout(() => {
-                    alert(`📊 Xuất CSV thành công!\n\n📁 Tên file: ${fileName}\n📊 Số bản ghi: ${sessions.length}\n📅 Tháng: ${currentMonth}/${currentYear}\n\n✅ File đã được tải về máy tính của bạn!`);
-                }, 200);
-                
-            } catch (error) {
-                console.error('Lỗi xuất CSV:', error);
-                alert('❌ Có lỗi xảy ra khi xuất file CSV!\nVui lòng thử lại sau.');
+                const res = await fetch(API_URL + "?action=getStudentSessions");
+                const sessions = await res.json();
+                return sessions;
+            } catch (e) {
+                console.warn("Could not fetch student sessions:", e);
+                return [];
+            }
+        }
+
+        exportStats() {
+            // For now, this is a placeholder. You would need to implement a server-side
+            // script to handle the CSV generation and download.
+            alert("Tính năng xuất thống kê đang được phát triển.");
+        }
+        
+        addSessionToSheet(sessionData) {
+            const payload = {
+                action: "addSession",
+                ...sessionData
+            };
+            fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams(payload)
+            }).then(response => response.text())
+            .then(data => {
+                console.log("Session saved to Google Sheet:", data);
+            }).catch(error => {
+                console.error("Error saving session:", error);
+            });
+        }
+    }
+
+    class Game {
+        constructor() {
+            this.correct = 0;
+            this.total = 0;
+            this.score = 0;
+            this.isAnswered = false;
+            this.selectedAnswer = '';
+            this.questionData = {};
+            this.startTime = 0;
+            this.timerInterval = null;
+            this.canvas = document.getElementById('canvas');
+            this.ctx = this.canvas.getContext('2d');
+            this.answers = ['up', 'down', 'left', 'right', 'in', 'out', 'zero'];
+            this.vectors = {
+                'up': { x: 0, y: -1, label: '↑ B', color: '#4299e1' },
+                'down': { x: 0, y: 1, label: '↓ B', color: '#4299e1' },
+                'left': { x: -1, y: 0, label: '← B', color: '#4299e1' },
+                'right': { x: 1, y: 0, label: '→ B', color: '#4299e1' },
+                'in': { x: 0, y: 0, label: '× B', color: '#4299e1' },
+                'out': { x: 0, y: 0, label: '● B', color: '#4299e1' }
+            };
+            this.vectorLabels = {
+                'up': 'Lên', 'down': 'Xuống', 'left': 'Trái', 'right': 'Phải', 'in': 'Vào', 'out': 'Ra', 'zero': '= 0'
+            };
+            
+            // Initial call
+            this.newQuestion();
+            this.startTimer();
+        }
+
+        startTimer() {
+            this.startTime = Date.now();
+            this.timerInterval = setInterval(() => {
+                const elapsed = Date.now() - this.startTime;
+                const minutes = Math.floor(elapsed / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                document.getElementById('timerDisplay').innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        stopTimer() {
+            clearInterval(this.timerInterval);
+        }
+
+        getElapsedTime() {
+            const elapsed = Date.now() - this.startTime;
+            return Math.floor(elapsed / 1000); // seconds
+        }
+
+        drawGrid() {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.beginPath();
+            this.ctx.strokeStyle = '#e2e8f0';
+            this.ctx.lineWidth = 1;
+            const size = 50;
+            for (let x = 0; x < this.canvas.width; x += size) {
+                this.ctx.moveTo(x, 0);
+                this.ctx.lineTo(x, this.canvas.height);
+            }
+            for (let y = 0; y < this.canvas.height; y += size) {
+                this.ctx.moveTo(0, y);
+                this.ctx.lineTo(this.canvas.width, y);
+            }
+            this.ctx.stroke();
+        }
+
+        drawVector(vector, color, label, isCurrent = false) {
+            const center = { x: this.canvas.width / 2, y: this.canvas.height / 2 };
+            const scale = 50;
+            const headlen = 10;
+            const from = { x: center.x, y: center.y };
+            const to = { x: center.x + vector.x * scale, y: center.y + vector.y * scale };
+            
+            this.ctx.beginPath();
+            this.ctx.moveTo(from.x, from.y);
+            this.ctx.lineTo(to.x, to.y);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = 3;
+            this.ctx.stroke();
+
+            // Arrowhead
+            const angle = Math.atan2(to.y - from.y, to.x - from.x);
+            this.ctx.moveTo(to.x, to.y);
+            this.ctx.lineTo(to.x - headlen * Math.cos(angle - Math.PI / 6), to.y - headlen * Math.sin(angle - Math.PI / 6));
+            this.ctx.moveTo(to.x, to.y);
+            this.ctx.lineTo(to.x - headlen * Math.cos(angle + Math.PI / 6), to.y - headlen * Math.sin(angle + Math.PI / 6));
+            this.ctx.stroke();
+
+            // Label
+            const mathOverlay = document.getElementById('mathOverlay');
+            const labelEl = document.createElement('div');
+            labelEl.className = 'math-label';
+            labelEl.style.left = `${to.x + 10}px`;
+            labelEl.style.top = `${to.y - 20}px`;
+            labelEl.innerText = label;
+            if (label.includes('F')) {
+                labelEl.classList.add('force');
+            } else if (label.includes('I')) {
+                labelEl.classList.add('current');
+            }
+            if (isCurrent) {
+                labelEl.classList.add('force-user');
+            }
+            mathOverlay.appendChild(labelEl);
+        }
+        
+        drawCircularVector(direction, color, label) {
+            const center = { x: this.canvas.width / 2, y: this.canvas.height / 2 };
+            this.ctx.beginPath();
+            this.ctx.arc(center.x, center.y, 20, 0, 2 * Math.PI, false);
+            this.ctx.fillStyle = color;
+            this.ctx.fill();
+            this.ctx.lineWidth = 3;
+            this.ctx.strokeStyle = color;
+            this.ctx.stroke();
+            
+            const mathOverlay = document.getElementById('mathOverlay');
+            const labelEl = document.createElement('div');
+            labelEl.className = 'math-label';
+            labelEl.style.left = `${center.x + 30}px`;
+            labelEl.style.top = `${center.y - 20}px`;
+            labelEl.innerText = label;
+            mathOverlay.appendChild(labelEl);
+            
+            if (direction === 'in') {
+                this.ctx.beginPath();
+                this.ctx.moveTo(center.x - 10, center.y - 10);
+                this.ctx.lineTo(center.x + 10, center.y + 10);
+                this.ctx.moveTo(center.x + 10, center.y - 10);
+                this.ctx.lineTo(center.x - 10, center.y + 10);
+                this.ctx.strokeStyle = 'white';
+                this.ctx.lineWidth = 3;
+                this.ctx.stroke();
+            } else { // out
+                this.ctx.beginPath();
+                this.ctx.arc(center.x, center.y, 5, 0, 2 * Math.PI, false);
+                this.ctx.fillStyle = 'white';
+                this.ctx.fill();
             }
         }
         
-        // Console commands for admin/debugging
-        window.gameStats = {
-            export: exportStatistics,
-            view: () => statsManager ? statsManager.exportStats() : null,
-            viewStudents: () => statsManager ? statsManager.getCurrentMonthSessions() : null,
-            exportCSV: exportCSV,
-            reset: () => {
-                if (confirm('⚠️ Bạn có chắc muốn xóa tất cả thống kê?')) {
-                    localStorage.removeItem('physicsGameStats');
-                    localStorage.removeItem('studentGameSessions');
-                    location.reload();
+        draw() {
+            this.canvas.width = this.canvas.offsetWidth;
+            this.canvas.height = this.canvas.offsetHeight;
+            this.drawGrid();
+            
+            document.getElementById('mathOverlay').innerHTML = '';
+            
+            const v1 = this.vectors[this.questionData.known1];
+            const v2 = this.vectors[this.questionData.known2];
+            
+            if (v1.x === 0 && v1.y === 0) {
+                this.drawCircularVector(this.questionData.known1, '#4299e1', `B`);
+            } else {
+                this.drawVector(v1, '#4299e1', `B`);
+            }
+            
+            if (v2.x === 0 && v2.y === 0) {
+                this.drawCircularVector(this.questionData.known2, '#10b981', `I`);
+            } else {
+                this.drawVector(v2, '#10b981', `I`);
+            }
+            
+            // Draw user's selected answer if available
+            if (this.selectedAnswer && this.selectedAnswer !== 'zero') {
+                const userVector = this.vectors[this.selectedAnswer];
+                if (userVector.x === 0 && userVector.y === 0) {
+                    this.drawCircularVector(this.selectedAnswer, '#8b5cf6', 'F');
+                } else {
+                    this.drawVector(userVector, '#8b5cf6', 'F');
                 }
             }
+            
+            // Draw correct answer on finish
+            if (this.isAnswered) {
+                if (this.questionData.correctAnswer === 'zero') {
+                    const mathOverlay = document.getElementById('mathOverlay');
+                    const labelEl = document.createElement('div');
+                    labelEl.className = 'math-label force-correct';
+                    labelEl.style.left = `${this.canvas.width / 2 - 30}px`;
+                    labelEl.style.top = `${this.canvas.height / 2 - 15}px`;
+                    labelEl.innerText = 'F = 0';
+                    mathOverlay.appendChild(labelEl);
+                } else {
+                    const correctVector = this.vectors[this.questionData.correctAnswer];
+                    if (correctVector.x === 0 && correctVector.y === 0) {
+                        this.drawCircularVector(this.questionData.correctAnswer, '#dc2626', 'F');
+                    } else {
+                        this.drawVector(correctVector, '#dc2626', 'F');
+                    }
+                }
+            }
+        }
+        
+        generateQuestion() {
+            const directions = ['up', 'down', 'left', 'right', 'in', 'out'];
+            let known1 = directions[Math.floor(Math.random() * directions.length)];
+            let known2 = directions[Math.floor(Math.random() * directions.length)];
+            
+            // Prevent same direction for both
+            if (known1 === known2) {
+                known2 = directions[(directions.indexOf(known2) + 1) % directions.length];
+            }
+            
+            const v1 = this.vectors[known1];
+            const v2 = this.vectors[known2];
+            const crossProduct = v1.x * v2.y - v1.y * v2.x;
+            let correctAnswer;
+
+            // Check if parallel or anti-parallel
+            const isParallel = v1.x * v2.y === v1.y * v2.x && v1.x * v2.x >= 0 && v1.y * v2.y >= 0;
+            const isAntiParallel = v1.x * v2.y === v1.y * v2.x && v1.x * v2.x <= 0 && v1.y * v2.y <= 0;
+            
+            if (isParallel || isAntiParallel) {
+                correctAnswer = 'zero';
+            } else {
+                let crossX = v1.y;
+                let crossY = -v1.x;
+                
+                let dotProduct = crossX * v2.x + crossY * v2.y;
+                if (dotProduct < 0) {
+                    crossX = -crossX;
+                    crossY = -crossY;
+                }
+                
+                // Final vector is perpendicular to both
+                let finalX = v2.y * (v1.x === 0 && v1.y === 0 ? 0 : (v1.x === 1 ? -1 : (v1.x === -1 ? 1 : 0))) - (v2.x === 0 && v2.y === 0 ? 0 : (v2.x === 1 ? -1 : (v2.x === -1 ? 1 : 0))) * v1.y;
+                let finalY = (v2.x === 0 && v2.y === 0 ? 0 : (v2.x === 1 ? 1 : (v2.x === -1 ? -1 : 0))) * v1.x - v2.x * (v1.x === 0 && v1.y === 0 ? 0 : (v1.x === 1 ? 1 : (v1.x === -1 ? -1 : 0)));
+                
+                // Let's use a simpler approach based on fixed values
+                // B(v1) x I(v2) = F(v3)
+                // (x1, y1) x (x2, y2) = (x1y2 - y1x2)
+                const v1_ = this.get3DVector(known1);
+                const v2_ = this.get3DVector(known2);
+                
+                const crossX_ = v1_.y * v2_.z - v1_.z * v2_.y;
+                const crossY_ = v1_.z * v2_.x - v1_.x * v2_.z;
+                const crossZ_ = v1_.x * v2_.y - v1_.y * v2_.x;
+                
+                if (crossX_ === 0 && crossY_ === 0 && crossZ_ === 0) {
+                    correctAnswer = 'zero';
+                } else {
+                    if (crossX_ === 1) correctAnswer = 'right';
+                    else if (crossX_ === -1) correctAnswer = 'left';
+                    else if (crossY_ === 1) correctAnswer = 'down';
+                    else if (crossY_ === -1) correctAnswer = 'up';
+                    else if (crossZ_ === 1) correctAnswer = 'out';
+                    else if (crossZ_ === -1) correctAnswer = 'in';
+                }
+            }
+
+            const unknownType = ['B', 'I', 'F'][Math.floor(Math.random() * 3)];
+            let known1Type, known2Type, unknownLabel;
+
+            if (unknownType === 'B') {
+                known1Type = 'I';
+                known2Type = 'F';
+                unknownLabel = 'B';
+                correctAnswer = this.getInverseVector(known2, known1);
+            } else if (unknownType === 'I') {
+                known1Type = 'B';
+                known2Type = 'F';
+                unknownLabel = 'I';
+                correctAnswer = this.getInverseVector(known1, known2);
+            } else { // F
+                known1Type = 'B';
+                known2Type = 'I';
+                unknownLabel = 'F';
+                correctAnswer = this.getCrossProductVector(known1, known2);
+            }
+            
+            // Randomize order of knowns
+            if (Math.random() > 0.5) {
+                [known1, known2] = [known2, known1];
+                [known1Type, known2Type] = [known2Type, known1Type];
+            }
+
+            this.questionData = {
+                known1: known1,
+                known2: known2,
+                correctAnswer: correctAnswer,
+                unknownLabel: unknownLabel,
+                known1Type: known1Type,
+                known2Type: known2Type
+            };
+            
+            document.getElementById('questionTitle').innerText = `Câu ${this.total + 1}: Tìm đại lượng chưa biết`;
+            document.getElementById('known1').innerHTML = `\\($\\vec{${known1Type}}$ = ${this.vectorLabels[known1]}\\)`;
+            document.getElementById('known2').innerHTML = `\\($\\vec{${known2Type}}$ = ${this.vectorLabels[known2]}\\)`;
+            document.getElementById('unknown').innerHTML = `\\(Cần tìm: \\vec{${unknownLabel}}\\)`;
+            
+            // Re-render MathJax
+            MathJax.typeset();
+            
+            this.draw();
+        }
+        
+        get3DVector(direction) {
+            switch(direction) {
+                case 'up': return {x: 0, y: -1, z: 0};
+                case 'down': return {x: 0, y: 1, z: 0};
+                case 'left': return {x: -1, y: 0, z: 0};
+                case 'right': return {x: 1, y: 0, z: 0};
+                case 'in': return {x: 0, y: 0, z: -1};
+                case 'out': return {x: 0, y: 0, z: 1};
+                default: return {x: 0, y: 0, z: 0};
+            }
+        }
+        
+        getVectorFrom3D(vector) {
+            if (vector.x === 1) return 'right';
+            if (vector.x === -1) return 'left';
+            if (vector.y === 1) return 'down';
+            if (vector.y === -1) return 'up';
+            if (vector.z === 1) return 'out';
+            if (vector.z === -1) return 'in';
+            return 'zero';
+        }
+        
+        getCrossProductVector(v1Dir, v2Dir) {
+            const v1 = this.get3DVector(v1Dir);
+            const v2 = this.get3DVector(v2Dir);
+            
+            const crossX = v1.y * v2.z - v1.z * v2.y;
+            const crossY = v1.z * v2.x - v1.x * v2.z;
+            const crossZ = v1.x * v2.y - v1.y * v2.x;
+            
+            const resultVector = {x: crossX, y: crossY, z: crossZ};
+            return this.getVectorFrom3D(resultVector);
+        }
+        
+        getInverseVector(v1Dir, v2Dir) {
+            // Find v3 so that v1 x v3 = v2
+            const v1 = this.get3DVector(v1Dir);
+            const v2 = this.get3DVector(v2Dir);
+            
+            const x = v1.y * v2.z - v1.z * v2.y;
+            const y = v1.z * v2.x - v1.x * v2.z;
+            const z = v1.x * v2.y - v1.y * v2.x;
+            
+            const resultVector = {x: x, y: y, z: z};
+            return this.getVectorFrom3D(resultVector);
+        }
+
+        checkAnswer() {
+            if (this.isAnswered) return;
+            this.isAnswered = true;
+            document.getElementById('checkBtn').disabled = true;
+            
+            const isCorrect = this.selectedAnswer === this.questionData.correctAnswer;
+            
+            if (isCorrect) {
+                this.correct++;
+                document.getElementById('popupIcon').innerText = '🎉';
+                document.getElementById('popupTitle').innerText = 'Chính xác!';
+                document.getElementById('popupDesc').innerText = 'Bạn đã áp dụng đúng quy tắc bàn tay trái!';
+                document.getElementById('popupScore').innerText = `+1 điểm`;
+                showMessage('correct', '✅ Đáp án chính xác!');
+            } else {
+                document.getElementById('popupIcon').innerText = '🤔';
+                document.getElementById('popupTitle').innerText = 'Chưa chính xác!';
+                document.getElementById('popupDesc').innerText = `Đáp án đúng là: ${this.vectorLabels[this.questionData.correctAnswer]}`;
+                document.getElementById('popupScore').innerText = `+0 điểm`;
+                showMessage('incorrect', `❌ Đáp án sai. Đáp án đúng là: ${this.vectorLabels[this.questionData.correctAnswer]}`);
+            }
+            
+            this.total++;
+            this.updateScore();
+            this.draw();
+            showPopup('resultPopup');
+            statsManager.trackQuestion(isCorrect);
+            
+            const userKey = `${studentName}_${studentClass}`;
+            if (statsManager.stats.userSessions[userKey]) {
+                statsManager.stats.userSessions[userKey].totalTime += this.getElapsedTime();
+                if (this.score > statsManager.stats.userSessions[userKey].bestScore) {
+                    statsManager.stats.userSessions[userKey].bestScore = this.score;
+                }
+            }
+            statsManager.saveStats();
+        }
+        
+        newQuestion() {
+            this.isAnswered = false;
+            this.selectedAnswer = '';
+            this.generateQuestion();
+            this.resetPalette();
+            document.getElementById('checkBtn').disabled = false;
+            document.getElementById('message').innerHTML = '';
+            document.getElementById('message').style.display = 'none';
+        }
+
+        updateScore() {
+            document.getElementById('score').innerText = this.correct;
+            document.getElementById('total').innerText = this.total;
+            if (this.total > 0) {
+                const accuracy = (this.correct / this.total * 100).toFixed(1);
+                document.getElementById('accuracy').innerText = `${accuracy}%`;
+            } else {
+                document.getElementById('accuracy').innerText = '0%';
+            }
+            this.score = this.correct;
+        }
+
+        resetPalette() {
+            const options = document.querySelectorAll('.answer-option');
+            options.forEach(option => option.classList.remove('selected'));
+        }
+    }
+
+    // Global Functions
+    function startGame(event) {
+        event.preventDefault();
+        studentName = document.getElementById('studentName').value;
+        studentClass = document.getElementById('studentClass').value;
+        
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('gamePage').style.display = 'block';
+        document.getElementById('statsToggle').style.display = 'block';
+        
+        game = new Game();
+        document.getElementById('playerInfo').innerText = `Tên: ${studentName} - Lớp: ${studentClass}`;
+        
+        statsManager = new StatisticsManager();
+        statsManager.trackUser(studentName, studentClass);
+        statsManager.trackGameStart();
+        
+        window.onresize = () => game.draw();
+    }
+    
+    function finishExam() {
+        if (!game) return;
+        game.stopTimer();
+        
+        const totalTime = game.getElapsedTime();
+        const sessionData = {
+            name: studentName,
+            studentClass: studentClass,
+            date: new Date().toLocaleDateString('vi-VN'),
+            accessCount: 1, // Placeholder
+            totalQuestions: game.total,
+            correctAnswers: game.correct,
+            wrongAnswers: game.total - game.correct,
+            accuracy: game.total > 0 ? (game.correct / game.total * 100).toFixed(1) : 0,
+            score10: game.total > 0 ? (game.correct / game.total * 10).toFixed(1) : 0,
+            score100: game.total > 0 ? (game.correct / game.total * 100).toFixed(1) : 0,
+            timeSpent: formatTime(totalTime)
         };
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'971b6ab9d2b98211',t:'MTc1NTYyNTAyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+        
+        statsManager.addSessionToSheet(sessionData);
+
+        document.getElementById('finalTotal').innerText = game.total;
+        document.getElementById('finalCorrect').innerText = game.correct;
+        document.getElementById('finalAccuracy').innerText = game.total > 0 ? (game.correct / game.total * 100).toFixed(1) + '%' : '0%';
+        document.getElementById('finalTime').innerText = formatTime(totalTime);
+        document.getElementById('finalResultsStudent').innerText = `Học sinh: ${studentName}`;
+        
+        const accuracy = game.total > 0 ? game.correct / game.total : 0;
+        const finalMessageEl = document.getElementById('finalMessage');
+        if (accuracy >= 0.8) {
+            finalMessageEl.innerText = '🎉 Chúc mừng! Bạn đã hoàn thành xuất sắc!';
+            finalMessageEl.className = 'final-message excellent';
+        } else if (accuracy >= 0.5) {
+            finalMessageEl.innerText = '💪 Khá tốt! Cần cố gắng hơn nữa.';
+            finalMessageEl.className = 'final-message good';
+        } else {
+            finalMessageEl.innerText = '📝 Cần ôn tập thêm! Đừng nản chí!';
+            finalMessageEl.className = 'final-message needs-improvement';
+        }
+        
+        showPopup('finalResultsPopup');
+    }
+    
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+    
+    function resetGame() {
+        if (confirm('Bạn có chắc muốn đặt lại toàn bộ?')) {
+            location.reload();
+        }
+    }
+    
+    function restartGame() {
+        closePopup('finalResultsPopup');
+        game.correct = 0;
+        game.total = 0;
+        game.score = 0;
+        game.updateScore();
+        game.newQuestion();
+        game.startTimer();
+    }
+
+    function selectAnswer(answer) {
+        if (game.isAnswered) return;
+        game.resetPalette();
+        const selectedEl = document.querySelector(`.answer-option[onclick="selectAnswer('${answer}')"]`);
+        selectedEl.classList.add('selected');
+        game.selectedAnswer = answer;
+    }
+
+    function checkAnswer() {
+        game.checkAnswer();
+    }
+    
+    function newQuestion() {
+        game.newQuestion();
+    }
+    
+    function showMessage(type, text) {
+        const messageEl = document.getElementById('message');
+        messageEl.style.display = 'block';
+        messageEl.className = `message ${type}`;
+        messageEl.innerText = text;
+    }
+    
+    function showPopup(id) {
+        document.getElementById(id).classList.add('show');
+    }
+    
+    function closePopup(id) {
+        document.getElementById(id).classList.remove('show');
+    }
+    
+    function toggleStats() {
+        const statsPanel = document.getElementById('statsPanel');
+        const statsToggle = document.getElementById('statsToggle');
+        statsPanel.classList.toggle('hidden');
+        if (statsPanel.classList.contains('hidden')) {
+            statsToggle.innerText = '📊';
+        } else {
+            statsToggle.innerText = '❌';
+        }
+    }
+    
+    async function showStudentStats() {
+        const statsTableBody = document.getElementById('statsTableBody');
+        statsTableBody.innerHTML = '<tr><td colspan="11">Đang tải dữ liệu...</td></tr>';
+        
+        const sessions = await statsManager.getStudentSessions();
+        statsTableBody.innerHTML = '';
+        
+        if (sessions.length > 0) {
+            let stt = 1;
+            sessions.forEach(session => {
+                const row = document.createElement('tr');
+                const accuracyClass = session.accuracy >= 80 ? 'score-excellent' : (session.accuracy >= 50 ? 'score-good' : 'score-needs-improvement');
+                row.innerHTML = `
+                    <td>${stt++}</td>
+                    <td>${session.name}</td>
+                    <td>${session.studentClass}</td>
+                    <td>${session.date}</td>
+                    <td>${session.accessCount}</td>
+                    <td>${session.totalQuestions}</td>
+                    <td>${session.correctAnswers}</td>
+                    <td>${session.wrongAnswers}</td>
+                    <td class="${accuracyClass}">${session.accuracy}%</td>
+                    <td>${session.score10}</td>
+                    <td>${session.score100}</td>
+                `;
+                statsTableBody.appendChild(row);
+            });
+        } else {
+            statsTableBody.innerHTML = '<tr><td colspan="11">Không có dữ liệu thống kê nào được tìm thấy.</td></tr>';
+        }
+        
+        const now = new Date();
+        const month = now.toLocaleString('vi-VN', { month: 'long', year: 'numeric' });
+        document.getElementById('currentMonth').innerText = month;
+        showPopup('studentStatsPopup');
+    }
+
+    function closeStudentStats() {
+        closePopup('studentStatsPopup');
+    }
+    
+    function exportCSV() {
+        // This function would be implemented to fetch data and create a CSV file
+        alert("Tính năng xuất CSV đang được phát triển.");
+    }
+
+</script>
+</body>
 </html>
